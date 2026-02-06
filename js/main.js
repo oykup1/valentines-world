@@ -31,7 +31,7 @@ function preload() {
     this.load.image('path', 'assets/tiles/Path_Middle.png');
     this.load.image('tree', 'assets/tiles/Peach_Tree.png');
     this.load.image('well', 'assets/tiles/Well.png');
-    this.load.image('background', 'assets/tiles/sky.webp');
+    this.load.image('background', 'assets/tiles/sky.jpg');
     this.load.image('shrub', 'assets/tiles/shrub.png');
     this.load.image('flower_red', 'assets/tiles/flower_red.png');
     this.load.image('flower_pink', 'assets/tiles/flower_pink.png');
@@ -52,11 +52,11 @@ function preload() {
 
 function create() {
     rng = new Phaser.Math.RandomDataGenerator([WORLD_SEED]);
-    this.add.image(100, 100, 'background')
-    .setOrigin(0)
+    this.add.image(500, 250, 'background')
+    //.setOrigin(0)
     .setScrollFactor(0)
     .setDepth(-100)
-    .setScale(1);
+    .setScale(0.65);    
     // Base grass
     for (let y = 0; y < WORLD_HEIGHT; y++) {
         world[y] = [];
