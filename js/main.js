@@ -28,7 +28,7 @@ new Phaser.Game(config);
 
 function preload() {
     this.load.image('grass', 'assets/tiles/Grass_1_Middle.png');
-    this.load.image('path', 'assets/tiles/Path_Middle.png');
+    this.load.image('path', 'assets/tiles/Beach_Decor_Tiles.png');
     this.load.image('tree', 'assets/tiles/Peach_Tree.png');
     this.load.image('well', 'assets/tiles/Well.png');
     this.load.image('background', 'assets/tiles/sky.jpg');
