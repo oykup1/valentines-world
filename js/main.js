@@ -39,7 +39,11 @@ function preload() {
     this.load.image('bench', 'assets/tiles/bench.png');
     this.load.image('fountain', 'assets/tiles/fountain.png');
     this.load.image('sign', 'assets/tiles/sign.png');
-
+    this.load.image('logs', 'assets/tiles/logs.png');
+    this.load.image('house', 'assets/tiles/house.png');
+    this.load.image('church', 'assets/tiles/church.png');
+//    this.load.image('house1', 'assets/tiles/house1.png');
+    
 
  // RIGHT
 this.load.image('right', 'assets/player/right.png');
@@ -90,8 +94,7 @@ function create() {
     createBranchPath(branchPoint.x, branchPoint.y);
 
     // Decorations
-    placeWell(this);
-    placeTrees(this);
+    this.trees = placeTrees(this);
     placeShrubs(this);
     placeFlowers(this);
     // Player (start facing forward)
@@ -105,18 +108,21 @@ function create() {
     player.body.setCollideWorldBounds(true);
     player.body.setSize(
     player.displayWidth * 0.75,
-    player.displayHeight * 0.50
+    player.displayHeight * 1.5
 );
 
 player.body.setOffset(
-    player.displayWidth * 0.25,
-    player.displayHeight * 0.75
+    player.displayWidth * 0.7,
+    player.displayHeight * 0.15
 );
 //Decorations
-    placeBench(this, 340, 351);
-    placeFountain(this, 350, 375);
-    placeSign(this, 264, 259);
-
+    this.bench = placeBench(this, 340, 351);
+    this.fountain = placeFountain(this, 350, 375);
+    this.sign = placeSign(this, 264, 259);
+    this.house = placeHouse(this, 145, 150);
+    this.well = placeWell(this, 348, 107);
+    placeLogs(this, 170, 149);
+    this.church = placeChurch(this, 435, 107);
     cursors = this.input.keyboard.createCursorKeys();
     const worldPixelWidth = WORLD_WIDTH * TILE_SIZE;
     const worldPixelHeight = WORLD_HEIGHT * TILE_SIZE;
@@ -179,7 +185,17 @@ function update() {
     const speed = 100;
     player.body.setVelocity(0);
     console.log(player.x, player.y);
-    
+    player.setDepth(player.y);
+   
+    this.house.setDepth(this.house.y);
+    this.well.setDepth(this.well.y);
+    this.bench.setDepth(this.bench.y);
+    this.trees.getChildren().forEach(tree => {
+        tree.setDepth(tree.y)
+    });
+    this.fountain.setDepth(this.fountain.y);
+    this.sign.setDepth(this.sign.y);
+    this.church.setDepth(this.church.y);
     let moving = false;
 
    if (cursors.left.isDown) {
@@ -293,6 +309,7 @@ function createBranchPath(startX, startY) {
 /* ===================== TREE PLACEMENT ===================== */
 
 function placeTrees(scene) {
+    const group = scene.add.group();
     const TREE_CHANCE = 0.04;
 
     for (let y = 0; y < WORLD_HEIGHT; y++) {
@@ -308,9 +325,11 @@ function placeTrees(scene) {
 
             tree.setOrigin(0.5, 1);
             tree.setScale(1);
-            tree.setDepth(10);
+            
+            group.add(tree);
         }
     }
+    return group;
 }
 /* ===================== SHRUB PLACEMENT ===================== */
 
@@ -334,6 +353,8 @@ function placeShrubs(scene) {
         }
     }
 }
+/* ===================== FLOWER PLACEMENT ===================== */
+
 function placeFlowers(scene) {
     const flowerColors = ['flower_red', 'flower_pink', 'flower_purple',]; // your sprite keys
     const SPACING = 3; // try 6, 8, 10 etc.
@@ -362,46 +383,46 @@ function placeFlowers(scene) {
 }
 /* ===================== WELL PLACEMENT ===================== */
 
-function placeWell(scene) {
-    let placed = false;
+function placeWell(scene, x, y) {
+   const well = scene.physics.add.staticImage(x, y, 'well')
+        .setOrigin(0.5,1)
+        .setScale(1);
+     
+        well.body.updateFromGameObject();
 
-    for (let y = 0; y < WORLD_HEIGHT; y++) {
-        for (let x = 0; x < WORLD_WIDTH; x++) {
-            if (placed) return;
-            if (tileType[y][x] !== 'grass') continue;
-            if (rng.frac() > 0.002) continue;
+        well.body.setSize(
+         well.width * 0.7,
+         well.height * 0.15
+        );
+        well.body.setOffset(
+        well.width * 0.15,
+        well.height * 0.8
+        );
 
-            const well = scene.add.image(
-                x * TILE_SIZE + TILE_SIZE / 2,
-                y * TILE_SIZE + TILE_SIZE,
-                'well'
-            );
-
-            well.setOrigin(0.5, 1);
-            well.setScale(1);
-            well.setDepth(9);
-
-            placed = true;
-        }
-    }
-
+        scene.physics.add.collider(player, well);
+        return well;
 }
+/* ===================== BENCH PLACEMENT ===================== */
+
  function placeBench(scene, x, y) {
   const bench = scene.physics.add.staticImage(x, y, 'bench')
         .setOrigin(0.5,1)       
-        .setScale(0.2);
+        .setScale(0.2)
+        .setDepth(9);
     bench.body.updateFromGameObject();
 
 bench.body.setSize(
     bench.displayWidth,
-    bench.displayHeight * 0.6
+    bench.displayHeight * 0.2
 );
-bench.body.setOffset(0, bench.displayHeight * 0.4);
+bench.body.setOffset(0, bench.displayHeight * 0.7);
 
     scene.physics.add.collider(player, bench);
 
     return bench;
 }
+/* ===================== FOUNTAIN PLACEMENT ===================== */
+
 function placeFountain(scene, x, y) {
     const fountain = scene.physics.add.staticImage(x, y, 'fountain')
         .setOrigin(0.5, 1)   // bottom center anchor (important)
@@ -422,11 +443,81 @@ function placeFountain(scene, x, y) {
 
     return fountain;
 }
+/* ===================== SIGN PLACEMENT ===================== */
+
 function placeSign(scene, x, y) {
   const sign = scene.physics.add.staticImage(x, y, 'sign')
         .setOrigin(0.5,1)       
         .setScale(0.35);
         sign.body.updateFromGameObject();
 
+        sign.body.setSize(
+         sign.width * 0.08,
+         sign.height * 0.15
+        );
+        sign.body.setOffset(
+        sign.width * 0.22,
+        sign.height * 0.17
+        );
+        scene.physics.add.collider(player, sign);
+
     return sign;
+}
+/* ===================== HOUSE PLACEMENT ===================== */
+function placeHouse(scene, x, y) {
+    const house = scene.physics.add.staticImage(x, y, 'house')
+        .setOrigin(0.5,1)
+        .setScale(0.6)
+      
+        house.body.updateFromGameObject();
+
+        house.body.setSize(
+         house.width * 0.4,
+         house.height * 0.3
+        );
+        house.body.setOffset(
+        house.width * 0.11,
+        house.height * 0.2
+        );
+        scene.physics.add.collider(player, house);
+        return house;
+}
+/* ===================== LOGS PLACEMENT ===================== */
+function placeLogs(scene, x, y) {
+    const logs = scene.physics.add.staticImage(x, y, 'logs')
+        .setOrigin(0,1)
+        .setScale(0.3);
+     
+        logs.body.updateFromGameObject();
+
+        logs.body.setSize(
+         logs.width * 0.2,
+         logs.height * 0.15
+        );
+        logs.body.setOffset(
+        logs.width * 0.07,
+        logs.height * 0.13
+        );
+
+        scene.physics.add.collider(player, logs);
+        return logs;
+}
+/* ===================== CHURCH PLACEMENT ===================== */
+function placeChurch(scene, x, y) {
+    const church = scene.physics.add.staticImage(x, y, 'church')
+        .setOrigin(0.5,0.8)
+        .setScale(0.6)
+      
+        church.body.updateFromGameObject();
+
+        church.body.setSize(
+         church.width * 0.45,
+         church.height * 0.2
+        );
+        church.body.setOffset(
+        church.width * 0.11,
+        church.height * 0.3
+        );
+        scene.physics.add.collider(player, church);
+        return church;
 }
