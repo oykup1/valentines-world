@@ -48,7 +48,9 @@ function preload() {
     this.load.image('flyer', 'assets/tiles/flyer.png');
     this.load.image('barn', 'assets/tiles/barn.png');
     this.load.image('barrel', 'assets/tiles/barrel.png');
-    
+    this.load.image('fence', 'assets/tiles/fence.png');
+    this.load.image('fence1', 'assets/tiles/fence1.png');
+
 
     
 
@@ -131,11 +133,18 @@ player.body.setOffset(
     placeLogs(this, 147, 270);
     this.church = placeChurch(this, 435, 107);
     this.house1 = placeHouse1(this, 192, 60);
-    placeTiles(this, [{x:372, y:224}, {x:380, y:224}], 'blanket');
+    placeBlanket(this, [{x:372, y:224}, {x:380, y:224}], 'blanket');
     placeBasket(this, 384, 219);
     this.flyer = placeFlyer(this, 353, 215);
     this.barn = placeBarn(this, 52, 386);
-    placeBarrel(this, 213, 260)
+    placeBarrel(this, 213, 260);
+    placeFence(this, [{x:244, y:20}, {x:118, y:32}, {x:118, y:56}, {x:175, y:409}, {x:175, y:349}], 'fence');
+    placeFence1(this, [{x:108, y:322}, {x:127, y:322}, {x:146, y:322}, {x:165, y:322}, {x:108, y:409}, {x:127, y:409}, {x:146, y:409}, {x:165, y:409}], 'fence1');
+
+
+
+
+
     cursors = this.input.keyboard.createCursorKeys();
     const worldPixelWidth = WORLD_WIDTH * TILE_SIZE;
     const worldPixelHeight = WORLD_HEIGHT * TILE_SIZE;
@@ -557,7 +566,7 @@ function placeHouse1(scene, x, y) {
         return house1;
 }
 /* ===================== BLANKET PLACEMENT ===================== */
-function placeTiles(scene, coords, texture) {
+function placeBlanket(scene, coords, texture) {
     coords.forEach(coord => {
         scene.physics.add.staticImage(
             coord.x,
@@ -583,7 +592,7 @@ function placeBasket(scene, x, y) {
 function placeFlyer(scene, x, y) {
     const flyer = scene.physics.add.staticImage(x, y, 'flyer')
         .setOrigin(0.5,1)
-        .setScale(0.6)
+        .setScale(0.5)
       
         flyer.body.updateFromGameObject();
 
@@ -625,4 +634,58 @@ function placeBarrel(scene, x, y) {
         );
         scene.physics.add.collider(player, barrel);
         return barrel;
+}
+/* ===================== FENCE-VERTICAL PLACEMENT ===================== */
+function placeFence(scene, coords, texture) {
+     coords.forEach(coord => {
+
+        const fence = scene.physics.add.staticImage(
+            coord.x,
+            coord.y,
+            texture
+        )
+        .setOrigin(0.5, 1)
+        .setScale(0.25);
+
+        fence.body.updateFromGameObject();
+
+        fence.body.setSize(
+            fence.width * 0.2,
+            fence.height * 0.15
+        );
+
+        fence.body.setOffset(
+            fence.width * 0.1,
+            fence.height * 0.1
+        );
+        scene.physics.add.collider(player, fence);
+        fence.setDepth(fence.y);
+    });
+}
+/* ===================== FENCE-HORIZONTAL PLACEMENT ===================== */
+function placeFence1(scene, coords, texture) {
+     coords.forEach(coord => {
+
+        const fence1 = scene.physics.add.staticImage(
+            coord.x,
+            coord.y,
+            texture
+        )
+        .setOrigin(0.5, 1)
+        .setScale(0.21);
+
+        fence1.body.updateFromGameObject();
+
+        fence1.body.setSize(
+            fence1.width * 0.16,
+            fence1.height * 0.15
+        );
+
+        fence1.body.setOffset(
+            fence1.width * 0.03,
+            fence1.height * 0.03
+        );
+        scene.physics.add.collider(player, fence1);
+        fence1.setDepth(fence1.y);
+    });
 }
