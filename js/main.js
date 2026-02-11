@@ -42,7 +42,14 @@ function preload() {
     this.load.image('logs', 'assets/tiles/logs.png');
     this.load.image('house', 'assets/tiles/house.png');
     this.load.image('church', 'assets/tiles/church.png');
-//    this.load.image('house1', 'assets/tiles/house1.png');
+    this.load.image('house1', 'assets/tiles/house1.png');
+    this.load.image('blanket', 'assets/tiles/blanket.png');
+    this.load.image('basket', 'assets/tiles/basket.png');
+    this.load.image('flyer', 'assets/tiles/flyer.png');
+    this.load.image('barn', 'assets/tiles/barn.png');
+    this.load.image('barrel', 'assets/tiles/barrel.png');
+    
+
     
 
  // RIGHT
@@ -119,10 +126,16 @@ player.body.setOffset(
     this.bench = placeBench(this, 340, 351);
     this.fountain = placeFountain(this, 350, 375);
     this.sign = placeSign(this, 264, 259);
-    this.house = placeHouse(this, 145, 150);
+    this.house = placeHouse(this, 183, 280);
     this.well = placeWell(this, 348, 107);
-    placeLogs(this, 170, 149);
+    placeLogs(this, 147, 270);
     this.church = placeChurch(this, 435, 107);
+    this.house1 = placeHouse1(this, 192, 60);
+    placeTiles(this, [{x:372, y:224}, {x:380, y:224}], 'blanket');
+    placeBasket(this, 384, 219);
+    this.flyer = placeFlyer(this, 353, 215);
+    this.barn = placeBarn(this, 52, 386);
+    placeBarrel(this, 213, 260)
     cursors = this.input.keyboard.createCursorKeys();
     const worldPixelWidth = WORLD_WIDTH * TILE_SIZE;
     const worldPixelHeight = WORLD_HEIGHT * TILE_SIZE;
@@ -196,6 +209,9 @@ function update() {
     this.fountain.setDepth(this.fountain.y);
     this.sign.setDepth(this.sign.y);
     this.church.setDepth(this.church.y);
+    this.house1.setDepth(this.house1.y);
+    this.flyer.setDepth(this.flyer.y);
+    this.barn.setDepth(this.barn.y);
     let moving = false;
 
    if (cursors.left.isDown) {
@@ -506,18 +522,107 @@ function placeLogs(scene, x, y) {
 function placeChurch(scene, x, y) {
     const church = scene.physics.add.staticImage(x, y, 'church')
         .setOrigin(0.5,0.8)
-        .setScale(0.6)
+        .setScale(0.5)
       
         church.body.updateFromGameObject();
 
         church.body.setSize(
-         church.width * 0.45,
+         church.width * 0.35,
          church.height * 0.2
         );
         church.body.setOffset(
-        church.width * 0.11,
-        church.height * 0.3
+        church.width * 0.09,
+        church.height * 0.23
         );
         scene.physics.add.collider(player, church);
         return church;
+}
+/* ===================== HOUSE1 PLACEMENT ===================== */
+function placeHouse1(scene, x, y) {
+    const house1 = scene.physics.add.staticImage(x, y, 'house1')
+        .setOrigin(0.5,1)
+        .setScale(0.6)
+      
+        house1.body.updateFromGameObject();
+
+        house1.body.setSize(
+         house1.width * 0.4,
+         house1.height * 0.3
+        );
+        house1.body.setOffset(
+        house1.width * 0.11,
+        house1.height * 0.2
+        );
+        scene.physics.add.collider(player, house1);
+        return house1;
+}
+/* ===================== BLANKET PLACEMENT ===================== */
+function placeTiles(scene, coords, texture) {
+    coords.forEach(coord => {
+        scene.physics.add.staticImage(
+            coord.x,
+            coord.y,
+            texture
+        )
+        .setScale(0.3)
+        
+    });
+    }
+    /* ===================== BASKET PLACEMENT ===================== */
+function placeBasket(scene, x, y) {
+    const basket = scene.physics.add.staticImage(x, y, 'basket')
+        .setOrigin(0.5,1)
+        .setScale(0.15)
+      
+        basket.body.updateFromGameObject();
+
+    
+        return basket;
+}
+/* ===================== FLYER PLACEMENT ===================== */
+function placeFlyer(scene, x, y) {
+    const flyer = scene.physics.add.staticImage(x, y, 'flyer')
+        .setOrigin(0.5,1)
+        .setScale(0.6)
+      
+        flyer.body.updateFromGameObject();
+
+        return flyer;
+}
+/* ===================== BARN PLACEMENT ===================== */
+function placeBarn(scene, x, y) {
+    const barn = scene.physics.add.staticImage(x, y, 'barn')
+        .setOrigin(0.5,1)
+        .setScale(0.6)
+      
+        barn.body.updateFromGameObject();
+
+        barn.body.setSize(
+         barn.width * 0.4,
+         barn.height * 0.3
+        );
+        barn.body.setOffset(
+        barn.width * 0.11,
+        barn.height * 0.2
+        );
+        scene.physics.add.collider(player, barn);
+        return barn;
+}
+/* ===================== BARREL PLACEMENT ===================== */
+function placeBarrel(scene, x, y) {
+    const barrel = scene.physics.add.staticImage(x, y, 'barrel')
+        .setOrigin(0.5,1)
+        .setScale(0.3)
+      
+        barrel.body.updateFromGameObject();
+        barrel.body.setSize(
+         barrel.width * 0.2,
+         barrel.height * 0.1
+        );
+        barrel.body.setOffset(
+        barrel.width * 0.2,
+        barrel.height * 0.2
+        );
+        scene.physics.add.collider(player, barrel);
+        return barrel;
 }
