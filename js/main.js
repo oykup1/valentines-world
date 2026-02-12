@@ -20,7 +20,7 @@ const config = {
     height: 180 * SCALE,
     pixelArt: true,
    // backgroundColor: 0xebb4d8,
-    physics: { default: 'arcade', arcade: { gravity: { y:0 }, debug:true } },
+    physics: { default: 'arcade', arcade: { gravity: { y:0 }, debug:false } },
     scene: { preload, create, update }
 };
 
@@ -50,6 +50,13 @@ function preload() {
     this.load.image('barrel', 'assets/tiles/barrel.png');
     this.load.image('fence', 'assets/tiles/fence.png');
     this.load.image('fence1', 'assets/tiles/fence1.png');
+    this.load.image('pig', 'assets/tiles/pig.png');
+    this.load.image('chicken', 'assets/tiles/chicken.png');
+    this.load.image('stump', 'assets/tiles/stump.png');
+    this.load.image('rock', 'assets/tiles/rock.png');
+    this.load.image('letter', 'assets/tiles/letter.png');
+    this.load.image('prompt', 'assets/tiles/prompt.png');
+    this.load.image('pressE', 'assets/tiles/PressE.png');
 
 
     
@@ -77,6 +84,17 @@ this.load.image('back_walk', 'assets/player/back_walk.png');
 this.load.image('back_walk1', 'assets/player/back_walk1.png');}
 
 function create() {
+    //Generate Messages
+    const params = new URLSearchParams(window.location.search);
+
+    this.letterMessages = [
+    params.get("l1") || "Default message 1",
+    params.get("l2") || "Default message 2",
+    params.get("l3") || "Default message 3",
+    params.get("l4") || "Default message 4",
+    params.get("l5") || "Default message 5",
+    params.get("l6") || "Default message 6"
+    ];
     rng = new Phaser.Math.RandomDataGenerator([WORLD_SEED]);
     this.add.image(500, 250, 'background')
     //.setOrigin(0)
@@ -138,12 +156,36 @@ player.body.setOffset(
     this.flyer = placeFlyer(this, 353, 215);
     this.barn = placeBarn(this, 52, 386);
     placeBarrel(this, 213, 260);
-    placeFence(this, [{x:244, y:20}, {x:118, y:32}, {x:118, y:56}, {x:175, y:409}, {x:175, y:349}], 'fence');
-    placeFence1(this, [{x:108, y:322}, {x:127, y:322}, {x:146, y:322}, {x:165, y:322}, {x:108, y:409}, {x:127, y:409}, {x:146, y:409}, {x:165, y:409}], 'fence1');
+    placeFence(this, [{x:244, y:20}, {x:118, y:32}, {x:118, y:56}, {x:175, y:409}, {x:175, y:349}, {x:17, y:349}, {x:17, y:371}, {x:17, y:392}], 'fence');
+    placeFence1(this, [{x:89, y:322},{x:70, y:322}, {x:47, y:322},{x:27, y:322},{x:108, y:322}, {x:127, y:322}, {x:146, y:322}, {x:165, y:322}, {x:92, y:409},{x:72, y:409}, {x:52, y:409},{x:32, y:409}, {x:108, y:409}, {x:127, y:409}, {x:146, y:409}, {x:165, y:409}], 'fence1');
+    placePig(this, 110, 344);
+    placeChicken(this, 155, 391);
+    placeStump(this, 128, 151);
+    placeRock(this, 426, 336);
+//Lettter Placement
+this.letters = placeLetters(this, [
+    {x: 140, y: 45},
+    {x: 350, y: 97},
+    {x: 33, y: 405},
+    {x: 443, y: 419},
+    {x: 446, y: 245},
+    {x: 342, y: 347}
+]);
 
-
-
-
+this.nearLetter = null;
+this.promptOpen = false;
+this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+this.physics.add.overlap(
+    player,
+    this.letters,
+    function(player, letter){
+        this.nearLetter = letter;
+    },
+    null,
+    this
+);
+//
 
     cursors = this.input.keyboard.createCursorKeys();
     const worldPixelWidth = WORLD_WIDTH * TILE_SIZE;
@@ -204,11 +246,49 @@ this.anims.create({
 }
 
 function update() {
+     // Freeze everything when prompt is open
+    if (this.promptOpen) {
+
+        if (Phaser.Input.Keyboard.JustDown(this.keyESC)) {
+            closePrompt.call(this);
+        }
+
+        return;
+    }
+// Show Press E icon
+if (this.nearLetter && !this.promptOpen) {
+
+    if (!this.pressEIcon) {
+        this.pressEIcon = this.add.image(
+            this.nearLetter.x,
+            this.nearLetter.y +20,
+            'pressE'
+        )
+        .setDepth(999)
+        .setScale(0.09)
+        .setScrollFactor(1);
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+        openPrompt.call(this);
+    }
+}
+else {
+    if (this.pressEIcon) {
+        this.pressEIcon.destroy();
+        this.pressEIcon = null;
+    }
+}
+
+
+    //Depth and Player
     const speed = 100;
     player.body.setVelocity(0);
     console.log(player.x, player.y);
     player.setDepth(player.y);
-   
+
+
+
     this.house.setDepth(this.house.y);
     this.well.setDepth(this.well.y);
     this.bench.setDepth(this.bench.y);
@@ -258,7 +338,75 @@ if (!moving) {
     player.anims.stop();
 }
 }
+function openPrompt() {
 
+    this.promptOpen = true;
+
+    // Freeze player
+    player.body.setVelocity(0);
+    player.body.enable = false;
+
+    // Destroy letter so it disappears forever
+    if (this.nearLetter) {
+        this.nearLetter.destroy();
+        this.nearLetter = null;
+    }
+
+    if (this.pressEIcon) {
+        this.pressEIcon.destroy();
+        this.pressEIcon = null;
+    }
+
+    // Dark overlay
+    this.overlay = this.add.rectangle(
+        0, 0,
+        this.scale.width,
+        this.scale.height,
+        0x000000,
+        0.6
+    )
+    .setOrigin(0)
+    .setScrollFactor(0)
+    .setDepth(1000);
+
+    // Scroll image
+    this.promptImage = this.add.image(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY,
+        'prompt'
+    )
+    .setScrollFactor(0)
+    .setDepth(1001)
+    .setScale(0.2);
+
+    const message = this.nearLetter?.getData('message') || "";
+
+    this.promptText = this.add.text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY,
+        message,
+        {
+            fontSize: '14px',
+            color: '#000',
+            wordWrap: { width: 200 }
+        }
+    )
+    .setOrigin(0.5)
+    .setScrollFactor(0)
+    .setDepth(1002)
+    .setScale(0.4);
+}
+function closePrompt() {
+
+    this.promptOpen = false;
+
+    // Re-enable player
+    player.body.enable = true;
+
+    if (this.overlay) this.overlay.destroy();
+    if (this.promptImage) this.promptImage.destroy();
+    if (this.promptText) this.promptText.destroy();
+}
 /* ===================== PATH GENERATION ===================== */
 
 function createMainPath() {
@@ -607,12 +755,12 @@ function placeBarn(scene, x, y) {
         barn.body.updateFromGameObject();
 
         barn.body.setSize(
-         barn.width * 0.4,
+         barn.width * 0.38,
          barn.height * 0.3
         );
         barn.body.setOffset(
-        barn.width * 0.11,
-        barn.height * 0.2
+        barn.width * 0.13,
+        barn.height * 0.21
         );
         scene.physics.add.collider(player, barn);
         return barn;
@@ -688,4 +836,64 @@ function placeFence1(scene, coords, texture) {
         scene.physics.add.collider(player, fence1);
         fence1.setDepth(fence1.y);
     });
+}
+/* ===================== PIG PLACEMENT ===================== */
+function placePig(scene, x, y) {
+    const pig = scene.physics.add.staticImage(x, y, 'pig')
+        .setOrigin(0.5,1)
+        .setScale(0.45)
+      
+        pig.body.updateFromGameObject();
+
+        return pig;
+}
+/* ===================== CHICKEN PLACEMENT ===================== */
+function placeChicken(scene, x, y) {
+    const chicken = scene.physics.add.staticImage(x, y, 'chicken')
+        .setOrigin(0.5,1)
+        .setScale(0.25)
+      
+        chicken.body.updateFromGameObject();
+
+        return chicken;
+}
+/* ===================== STUMP PLACEMENT ===================== */
+function placeStump(scene, x, y) {
+    const stump = scene.physics.add.staticImage(x, y, 'stump')
+        .setOrigin(0.5,1)
+        .setScale(0.3)
+      
+        stump.body.updateFromGameObject();
+
+        return stump;
+}
+/* ===================== ROCK PLACEMENT ===================== */
+function placeRock(scene, x, y,) {
+    const rock = scene.physics.add.staticImage(x, y, 'rock')
+        .setOrigin(0.5,1)
+        .setScale(0.25)
+      
+        rock.body.updateFromGameObject();
+
+        return rock;
+}
+/* ===================== LETTER PLACEMENT ===================== */
+function placeLetters(scene, coords) {
+
+    const group = scene.physics.add.staticGroup();
+
+    coords.forEach((coord, index) => {
+
+        const letter = group.create(coord.x, coord.y, 'letter')
+            .setOrigin(0.5, 1)
+            .setScale(0.02);
+
+        letter.setData('message', scene.letterMessages[index]);
+
+        letter.body.updateFromGameObject();
+        letter.setDepth(letter.y);
+    });
+
+    group.refresh();
+    return group;
 }
