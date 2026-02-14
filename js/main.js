@@ -1,3 +1,9 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://gzlxcythoelqxhgemujs.supabase.co';
+const supabaseKey = 'sb_publishable_G7VNJke77qxqMmwR3RDb5w_CaWu0WKZ';
+
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 const TILE_SIZE = 10;
 const WORLD_WIDTH = 50;
 const WORLD_HEIGHT = 50;
@@ -83,18 +89,25 @@ this.load.image('back', 'assets/player/back.png');
 this.load.image('back_walk', 'assets/player/back_walk.png');
 this.load.image('back_walk1', 'assets/player/back_walk1.png');}
 
-function create() {
-    //Generate Messages
-    const params = new URLSearchParams(window.location.search);
+async function create() {
+    const worldId = window.location.pathname.split("/game/")[1];
 
-    this.letterMessages = [
-    params.get("l1") || "Default message 1",
-    params.get("l2") || "Default message 2",
-    params.get("l3") || "Default message 3",
-    params.get("l4") || "Default message 4",
-    params.get("l5") || "Default message 5",
-    params.get("l6") || "Default message 6"
-    ];
+    const { data, error } = await supabaseClient
+        .from("valentine_worlds")
+        .select("prompts")
+        .eq("id", worldId)
+        .single();
+
+    if (error || !data) {
+        console.error("Error loading world:", error);
+        this.letterMessages = ["Something went wrong 💔"];
+    } else {
+        // Extract only the answers
+        this.letterMessages = data.prompts.map(p => p.answer);
+        while (this.letterMessages.length < 6) {
+        this.letterMessages.push("💌");
+}
+    }
     rng = new Phaser.Math.RandomDataGenerator([WORLD_SEED]);
     this.add.image(500, 250, 'background')
     //.setOrigin(0)
@@ -340,24 +353,23 @@ if (!moving) {
 }
 function openPrompt() {
 
-    this.promptOpen = true;
+     this.promptOpen = true;
 
-    // Freeze player
     player.body.setVelocity(0);
     player.body.enable = false;
 
-    // Destroy letter so it disappears forever
-    if (this.nearLetter) {
-        this.nearLetter.destroy();
-        this.nearLetter = null;
-    }
+    const message = this.nearLetter?.getData('message') || "";
 
     if (this.pressEIcon) {
         this.pressEIcon.destroy();
         this.pressEIcon = null;
     }
 
-    // Dark overlay
+    if (this.nearLetter) {
+        this.nearLetter.destroy();
+        this.nearLetter = null;
+    }
+
     this.overlay = this.add.rectangle(
         0, 0,
         this.scale.width,
@@ -369,7 +381,6 @@ function openPrompt() {
     .setScrollFactor(0)
     .setDepth(1000);
 
-    // Scroll image
     this.promptImage = this.add.image(
         this.cameras.main.centerX,
         this.cameras.main.centerY,
@@ -378,8 +389,6 @@ function openPrompt() {
     .setScrollFactor(0)
     .setDepth(1001)
     .setScale(0.2);
-
-    const message = this.nearLetter?.getData('message') || "";
 
     this.promptText = this.add.text(
         this.cameras.main.centerX,
