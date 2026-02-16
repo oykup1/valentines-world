@@ -3,7 +3,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const supabaseUrl = 'https://gzlxcythoelqxhgemujs.supabase.co';
 const supabaseKey = 'sb_publishable_G7VNJke77qxqMmwR3RDb5w_CaWu0WKZ';
 
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseClient = createClient(supabaseUrl, supabaseKey);
 const TILE_SIZE = 10;
 const WORLD_WIDTH = 50;
 const WORLD_HEIGHT = 50;
