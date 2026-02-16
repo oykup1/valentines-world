@@ -247,7 +247,9 @@ async function loadWorldData() {
         console.error("Error loading world:", error);
         return;
     } else {
-        this.letterMessages = data.prompts.map(p => p.answer);
+        this.letterMessages = data.prompts.map(p => ({
+            question: p.question,
+            answer: p.answer}));
     }
     //Lettter Placement
     this.letters = placeLetters(this, [
@@ -372,7 +374,10 @@ function openPrompt() {
     this.player.body.setVelocity(0);
     this.player.body.enable = false;
 
-    const message = this.nearLetter?.getData('prompts') || "";
+    const promptData = this.nearLetter?.getData('prompts');
+
+    const question = promptData?.question || "";
+    const answer = promptData?.answer || "";
 
     if (this.pressEIcon) {
         this.pressEIcon.destroy();
@@ -405,19 +410,21 @@ function openPrompt() {
     .setScale(0.2);
 
     this.promptText = this.add.text(
-        this.cameras.main.centerX,
-        this.cameras.main.centerY,
-        message,
-        {
-            fontSize: '14px',
-            color: '#000',
-            wordWrap: { width: 200 }
-        }
+    this.cameras.main.centerX,
+    this.cameras.main.centerY,
+    question + "\n\n" + answer,
+    {
+        fontSize: '14px',
+        color: '#000',
+        align: 'center',
+        wordWrap: { width: 200 }
+    }
     )
     .setOrigin(0.5)
     .setScrollFactor(0)
     .setDepth(1002)
     .setScale(0.4);
+
 }
 function closePrompt() {
 
