@@ -372,7 +372,7 @@ function openPrompt() {
     this.player.body.setVelocity(0);
     this.player.body.enable = false;
 
-    const message = this.nearLetter?.getData('message') || "";
+    const message = this.nearLetter?.getData('prompts') || "";
 
     if (this.pressEIcon) {
         this.pressEIcon.destroy();
