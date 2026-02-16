@@ -138,22 +138,22 @@ async function create() {
     placeShrubs(this);
     placeFlowers(this);
     // Player (start facing forward)
-    player = this.physics.add.sprite(
+    this.player = this.physics.add.sprite(
         243,
         264,
         'forward'
     )
     .setOrigin(0.5, 1)
     .setScale(0.5);
-    player.body.setCollideWorldBounds(true);
-    player.body.setSize(
-    player.displayWidth * 0.75,
-    player.displayHeight * 1.5
+    this.player.body.setCollideWorldBounds(true);
+    this.player.body.setSize(
+    this.player.displayWidth * 0.75,
+    this.player.displayHeight * 1.5
 );
 
-player.body.setOffset(
-    player.displayWidth * 0.7,
-    player.displayHeight * 0.15
+    this.player.body.setOffset(
+    this.player.displayWidth * 0.7,
+    this.player.displayHeight * 0.15
 );
 //Decorations
     this.bench = placeBench(this, 340, 351);
@@ -190,7 +190,7 @@ this.promptOpen = false;
 this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 this.physics.add.overlap(
-    player,
+    this.player,
     this.letters,
     function(player, letter){
         this.nearLetter = letter;
@@ -208,7 +208,7 @@ this.physics.world.setBounds(0, 0, worldPixelWidth, worldPixelHeight);
 this.cameras.main.setBounds(0, 0, worldPixelWidth, worldPixelHeight);
     // Camera
     const cam = this.cameras.main;
-    cam.startFollow(player);
+    cam.startFollow(this.player);
     cam.setZoom(SCALE);
 
    // WALK RIGHT
@@ -296,9 +296,8 @@ else {
 
     //Depth and Player
     const speed = 100;
-    player.body.setVelocity(0);
-    console.log(player.x, player.y);
-    player.setDepth(player.y);
+    this.player.body.setVelocity(0);
+    this.player.setDepth(this.player.y);
 
 
 
@@ -317,46 +316,46 @@ else {
     let moving = false;
 
    if (cursors.left.isDown) {
-    player.body.setVelocityX(-speed);
-    player.anims.play('walk_left', true);
+    this.player.body.setVelocityX(-speed);
+    this.player.anims.play('walk_left', true);
     moving = true;
 }
 else if (cursors.right.isDown) {
-    player.body.setVelocityX(speed);
-    player.anims.play('walk_right', true);
+    this.player.body.setVelocityX(speed);
+    this.player.anims.play('walk_right', true);
     moving = true;
 }
 else if (cursors.up.isDown) {
-    player.body.setVelocityY(-speed);
-    player.anims.play('walk_back', true);
+    this.player.body.setVelocityY(-speed);
+    this.player.anims.play('walk_back', true);
     moving = true;
 }
 else if (cursors.down.isDown) {
-    player.body.setVelocityY(speed);
-    player.anims.play('walk_forward', true);
+    this.player.body.setVelocityY(speed);
+    this.player.anims.play('walk_forward', true);
     moving = true;
 }
 
 // Idle
 if (!moving) {
-    const last = player.anims.currentAnim?.key;
+    const last = this.player.anims.currentAnim?.key;
 
     switch (last) {
-        case 'walk_left': player.setTexture('left'); break;
-        case 'walk_right': player.setTexture('right'); break;
-        case 'walk_back': player.setTexture('back'); break;
-        default: player.setTexture('forward');
+        case 'walk_left': this.player.setTexture('left'); break;
+        case 'walk_right': this.player.setTexture('right'); break;
+        case 'walk_back': this.player.setTexture('back'); break;
+        default: this.player.setTexture('forward');
     }
 
-    player.anims.stop();
+    this.player.anims.stop();
 }
 }
 function openPrompt() {
 
      this.promptOpen = true;
 
-    player.body.setVelocity(0);
-    player.body.enable = false;
+    this.player.body.setVelocity(0);
+    this.player.body.enable = false;
 
     const message = this.nearLetter?.getData('message') || "";
 
@@ -410,7 +409,7 @@ function closePrompt() {
     this.promptOpen = false;
 
     // Re-enable player
-    player.body.enable = true;
+    this.player.body.enable = true;
 
     if (this.overlay) this.overlay.destroy();
     if (this.promptImage) this.promptImage.destroy();
@@ -581,7 +580,7 @@ function placeWell(scene, x, y) {
         well.height * 0.8
         );
 
-        scene.physics.add.collider(player, well);
+        scene.physics.add.collider(scene.player, well);
         return well;
 }
 /* ===================== BENCH PLACEMENT ===================== */
@@ -599,7 +598,7 @@ bench.body.setSize(
 );
 bench.body.setOffset(0, bench.displayHeight * 0.7);
 
-    scene.physics.add.collider(player, bench);
+    scene.physics.add.collider(scene.player, bench);
 
     return bench;
 }
@@ -621,7 +620,7 @@ function placeFountain(scene, x, y) {
         fountain.displayHeight - bodyHeight        // push to bottom
     );
 
-        scene.physics.add.collider(player, fountain);
+        scene.physics.add.collider(scene.player, fountain);
 
     return fountain;
 }
@@ -641,7 +640,7 @@ function placeSign(scene, x, y) {
         sign.width * 0.22,
         sign.height * 0.17
         );
-        scene.physics.add.collider(player, sign);
+        scene.physics.add.collider(scene.player, sign);
 
     return sign;
 }
@@ -661,7 +660,7 @@ function placeHouse(scene, x, y) {
         house.width * 0.11,
         house.height * 0.2
         );
-        scene.physics.add.collider(player, house);
+        scene.physics.add.collider(scene.player, house);
         return house;
 }
 /* ===================== LOGS PLACEMENT ===================== */
@@ -681,7 +680,7 @@ function placeLogs(scene, x, y) {
         logs.height * 0.13
         );
 
-        scene.physics.add.collider(player, logs);
+        scene.physics.add.collider(scene.player, logs);
         return logs;
 }
 /* ===================== CHURCH PLACEMENT ===================== */
@@ -700,7 +699,7 @@ function placeChurch(scene, x, y) {
         church.width * 0.09,
         church.height * 0.23
         );
-        scene.physics.add.collider(player, church);
+        scene.physics.add.collider(scene.player, church);
         return church;
 }
 /* ===================== HOUSE1 PLACEMENT ===================== */
@@ -719,7 +718,7 @@ function placeHouse1(scene, x, y) {
         house1.width * 0.11,
         house1.height * 0.2
         );
-        scene.physics.add.collider(player, house1);
+        scene.physics.add.collider(scene.player, house1);
         return house1;
 }
 /* ===================== BLANKET PLACEMENT ===================== */
@@ -771,7 +770,7 @@ function placeBarn(scene, x, y) {
         barn.width * 0.13,
         barn.height * 0.21
         );
-        scene.physics.add.collider(player, barn);
+        scene.physics.add.collider(scene.player, barn);
         return barn;
 }
 /* ===================== BARREL PLACEMENT ===================== */
@@ -789,7 +788,7 @@ function placeBarrel(scene, x, y) {
         barrel.width * 0.2,
         barrel.height * 0.2
         );
-        scene.physics.add.collider(player, barrel);
+        scene.physics.add.collider(scene.player, barrel);
         return barrel;
 }
 /* ===================== FENCE-VERTICAL PLACEMENT ===================== */
@@ -815,7 +814,7 @@ function placeFence(scene, coords, texture) {
             fence.width * 0.1,
             fence.height * 0.1
         );
-        scene.physics.add.collider(player, fence);
+        scene.physics.add.collider(scene.player, fence);
         fence.setDepth(fence.y);
     });
 }
@@ -842,7 +841,7 @@ function placeFence1(scene, coords, texture) {
             fence1.width * 0.03,
             fence1.height * 0.03
         );
-        scene.physics.add.collider(player, fence1);
+        scene.physics.add.collider(scene.player, fence1);
         fence1.setDepth(fence1.y);
     });
 }
