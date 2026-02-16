@@ -33,67 +33,67 @@ const config = {
 new Phaser.Game(config);
 
 function preload() {
-    this.load.image('grass', 'assets/tiles/Grass_1_Middle.png');
-    this.load.image('path', 'assets/tiles/Beach_Decor_Tiles.png');
-    this.load.image('tree', 'assets/tiles/Peach_Tree.png');
-    this.load.image('well', 'assets/tiles/Well.png');
-    this.load.image('background', 'assets/tiles/sky.jpg');
-    this.load.image('shrub', 'assets/tiles/shrub.png');
-    this.load.image('flower_red', 'assets/tiles/flower_red.png');
-    this.load.image('flower_pink', 'assets/tiles/flower_pink.png');
-    this.load.image('flower_purple', 'assets/tiles/flower_purple.png');
-    this.load.image('bench', 'assets/tiles/bench.png');
-    this.load.image('fountain', 'assets/tiles/fountain.png');
-    this.load.image('sign', 'assets/tiles/sign.png');
-    this.load.image('logs', 'assets/tiles/logs.png');
-    this.load.image('house', 'assets/tiles/house.png');
-    this.load.image('church', 'assets/tiles/church.png');
-    this.load.image('house1', 'assets/tiles/house1.png');
-    this.load.image('blanket', 'assets/tiles/blanket.png');
-    this.load.image('basket', 'assets/tiles/basket.png');
-    this.load.image('flyer', 'assets/tiles/flyer.png');
-    this.load.image('barn', 'assets/tiles/barn.png');
-    this.load.image('barrel', 'assets/tiles/barrel.png');
-    this.load.image('fence', 'assets/tiles/fence.png');
-    this.load.image('fence1', 'assets/tiles/fence1.png');
-    this.load.image('pig', 'assets/tiles/pig.png');
-    this.load.image('chicken', 'assets/tiles/chicken.png');
-    this.load.image('stump', 'assets/tiles/stump.png');
-    this.load.image('rock', 'assets/tiles/rock.png');
-    this.load.image('letter', 'assets/tiles/letter.png');
-    this.load.image('prompt', 'assets/tiles/prompt.png');
-    this.load.image('pressE', 'assets/tiles/PressE.png');
+    this.load.image('grass', '/assets/tiles/Grass_1_Middle.png');
+    this.load.image('path', '/assets/tiles/Beach_Decor_Tiles.png');
+    this.load.image('tree', '/assets/tiles/Peach_Tree.png');
+    this.load.image('well', '/assets/tiles/Well.png');
+    this.load.image('background', '/assets/tiles/sky.jpg');
+    this.load.image('shrub', '/assets/tiles/shrub.png');
+    this.load.image('flower_red', '/assets/tiles/flower_red.png');
+    this.load.image('flower_pink', '/assets/tiles/flower_pink.png');
+    this.load.image('flower_purple', '/assets/tiles/flower_purple.png');
+    this.load.image('bench', '/assets/tiles/bench.png');
+    this.load.image('fountain', '/assets/tiles/fountain.png');
+    this.load.image('sign', '/assets/tiles/sign.png');
+    this.load.image('logs', '/assets/tiles/logs.png');
+    this.load.image('house', '/assets/tiles/house.png');
+    this.load.image('church', '/assets/tiles/church.png');
+    this.load.image('house1', '/assets/tiles/house1.png');
+    this.load.image('blanket', '/assets/tiles/blanket.png');
+    this.load.image('basket', '/assets/tiles/basket.png');
+    this.load.image('flyer', '/assets/tiles/flyer.png');
+    this.load.image('barn', '/assets/tiles/barn.png');
+    this.load.image('barrel', '/assets/tiles/barrel.png');
+    this.load.image('fence', '/assets/tiles/fence.png');
+    this.load.image('fence1', '/assets/tiles/fence1.png');
+    this.load.image('pig', '/assets/tiles/pig.png');
+    this.load.image('chicken', '/assets/tiles/chicken.png');
+    this.load.image('stump', '/assets/tiles/stump.png');
+    this.load.image('rock', '/assets/tiles/rock.png');
+    this.load.image('letter', '/assets/tiles/letter.png');
+    this.load.image('prompt', '/assets/tiles/prompt.png');
+    this.load.image('pressE', '/assets/tiles/PressE.png');
 
 
     
 
  // RIGHT
-this.load.image('right', 'assets/player/right.png');
-this.load.image('right_walk', 'assets/player/right_walk.png');
-this.load.image('right_walk1', 'assets/player/right_walk1.png');
-this.load.image('right_walk2', 'assets/player/right_walk2.png');
+this.load.image('right', '/assets/player/right.png');
+this.load.image('right_walk', '/assets/player/right_walk.png');
+this.load.image('right_walk1', '/assets/player/right_walk1.png');
+this.load.image('right_walk2', '/assets/player/right_walk2.png');
 
 // LEFT
-this.load.image('left', 'assets/player/left.png');
-this.load.image('left_walk', 'assets/player/left_walk.png');
-this.load.image('left_walk1', 'assets/player/left_walk1.png');
-this.load.image('left_walk2', 'assets/player/left_walk2.png');
+this.load.image('left', '/assets/player/left.png');
+this.load.image('left_walk', '/assets/player/left_walk.png');
+this.load.image('left_walk1', '/assets/player/left_walk1.png');
+this.load.image('left_walk2', '/assets/player/left_walk2.png');
 
 // FORWARD
-this.load.image('forward', 'assets/player/forward.png');
-this.load.image('forward_walk', 'assets/player/forward_walk.png');
-this.load.image('forward_walk1', 'assets/player/forward_walk1.png');
+this.load.image('forward', '/assets/player/forward.png');
+this.load.image('forward_walk', '/assets/player/forward_walk.png');
+this.load.image('forward_walk1', '/assets/player/forward_walk1.png');
 
 // BACK
-this.load.image('back', 'assets/player/back.png');
-this.load.image('back_walk', 'assets/player/back_walk.png');
-this.load.image('back_walk1', 'assets/player/back_walk1.png');}
+this.load.image('back', '/assets/player/back.png');
+this.load.image('back_walk', '/assets/player/back_walk.png');
+this.load.image('back_walk1', '/assets/player/back_walk1.png');}
 
 async function create() {
     const worldId = window.location.pathname.split("/game/")[1];
 
     const { data, error } = await supabaseClient
-        .from("valentine_worlds")
+        .from("valentines_worlds")
         .select("prompts")
         .eq("id", worldId)
         .single();
