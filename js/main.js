@@ -407,7 +407,7 @@ function openPrompt() {
     )
     .setScrollFactor(0)
     .setDepth(1001)
-    .setScale(0.2);
+    .setScale(0.4);
 
     this.promptText = this.add.text(
     this.cameras.main.centerX,
