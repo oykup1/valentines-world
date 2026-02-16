@@ -88,27 +88,10 @@ this.load.image('back', '/assets/player/back.png');
 this.load.image('back_walk', '/assets/player/back_walk.png');
 this.load.image('back_walk1', '/assets/player/back_walk1.png');}
 
-async function create() {
+ function create() {
     console.log("Create started");
+    this.letterMessages = ["💌","💌","💌","💌","💌","💌"];
 
-    const worldId = window.location.pathname.split("/game/")[1];
-
-    const { data, error } = await supabaseClient
-        .from("valentines_worlds")
-        .select("prompts")
-        .eq("id", worldId)
-        .single();
-
-    if (error || !data) {
-        console.error("Error loading world:", error);
-        this.letterMessages = ["Something went wrong 💔"];
-    } else {
-        // Extract only the answers
-        this.letterMessages = data.prompts.map(p => p.answer);
-        while (this.letterMessages.length < 6) {
-        this.letterMessages.push("💌");
-}
-    }
     rng = new Phaser.Math.RandomDataGenerator([WORLD_SEED]);
     this.add.image(500, 250, 'background')
     //.setOrigin(0)
@@ -261,11 +244,39 @@ this.anims.create({
     frameRate: 8,
     repeat: -1
 });
+this.loadWorldData = loadWorldData.bind(this);
+this.loadWorldData();
+}
+
+
+async function loadWorldData() {
+
+    const worldId = window.location.pathname.split("/game/")[1];
+
+    if (!worldId) return;
+
+    const { data, error } = await supabaseClient
+        .from("valentines_worlds")
+        .select("prompts")
+        .eq("id", worldId)
+        .single();
+
+    if (error || !data) {
+        console.error("Error loading world:", error);
+        return;
+    }
+
+    this.letterMessages = data.prompts.map(p => p.answer);
+
+    while (this.letterMessages.length < 6) {
+        this.letterMessages.push("💌");
+    }
 }
 
 function update() {
      // Freeze everything when prompt is open
      console.log(this.player);
+    if (!this.player) return;
 
     if (this.promptOpen) {
 
