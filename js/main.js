@@ -89,6 +89,8 @@ this.load.image('back_walk', '/assets/player/back_walk.png');
 this.load.image('back_walk1', '/assets/player/back_walk1.png');}
 
 async function create() {
+    console.log("Create started");
+
     const worldId = window.location.pathname.split("/game/")[1];
 
     const { data, error } = await supabaseClient
@@ -137,6 +139,8 @@ async function create() {
     placeShrubs(this);
     placeFlowers(this);
     // Player (start facing forward)
+    console.log("Before player creation");
+
     this.player = this.physics.add.sprite(
         243,
         264,
@@ -154,6 +158,8 @@ async function create() {
     this.player.displayWidth * 0.7,
     this.player.displayHeight * 0.15
 );
+console.log("Player created");
+
 //Decorations
     this.bench = placeBench(this, 340, 351);
     this.fountain = placeFountain(this, 350, 375);
