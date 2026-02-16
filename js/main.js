@@ -122,7 +122,6 @@ this.load.image('back_walk1', '/assets/player/back_walk1.png');}
     placeShrubs(this);
     placeFlowers(this);
     // Player (start facing forward)
-    console.log("Before player creation");
 
     this.player = this.physics.add.sprite(
         243,
@@ -141,7 +140,6 @@ this.load.image('back_walk1', '/assets/player/back_walk1.png');}
     this.player.displayWidth * 0.7,
     this.player.displayHeight * 0.15
 );
-console.log("Player created");
 
 //Decorations
     this.bench = placeBench(this, 340, 351);
@@ -275,7 +273,6 @@ async function loadWorldData() {
 
 function update() {
      // Freeze everything when prompt is open
-     console.log(this.player);
     if (!this.player) return;
 
     if (this.promptOpen) {
@@ -914,7 +911,7 @@ function placeLetters(scene, coords) {
             .setOrigin(0.5, 1)
             .setScale(0.02);
 
-        letter.setData('message', scene.letterMessages[index]);
+        letter.setData('prompts', scene.letterMessages[index]);
 
         letter.body.updateFromGameObject();
         letter.setDepth(letter.y);
