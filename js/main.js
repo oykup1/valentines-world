@@ -266,9 +266,7 @@ async function loadWorldData() {
 
     this.letterMessages = data.prompts.map(p => p.answer);
 
-    while (this.letterMessages.length < 6) {
-        this.letterMessages.push("💌");
-    }
+   
 }
 
 function update() {
