@@ -16,7 +16,6 @@ const WORLD_SEED = 'butt';
 
 let world = [];
 let tileType = [];
-let player;
 let cursors;
 let rng;
 
