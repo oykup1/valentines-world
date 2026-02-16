@@ -259,6 +259,8 @@ this.anims.create({
 
 function update() {
      // Freeze everything when prompt is open
+     console.log(this.player);
+
     if (this.promptOpen) {
 
         if (Phaser.Input.Keyboard.JustDown(this.keyESC)) {
