@@ -161,29 +161,13 @@ this.load.image('back_walk1', '/assets/player/back_walk1.png');}
     placeChicken(this, 155, 391);
     placeStump(this, 128, 151);
     placeRock(this, 426, 336);
-//Lettter Placement
-this.letters = placeLetters(this, [
-    {x: 140, y: 45},
-    {x: 350, y: 97},
-    {x: 33, y: 405},
-    {x: 443, y: 419},
-    {x: 446, y: 245},
-    {x: 342, y: 347}
-]);
+
 
 this.nearLetter = null;
 this.promptOpen = false;
 this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-this.physics.add.overlap(
-    this.player,
-    this.letters,
-    function(player, letter){
-        this.nearLetter = letter;
-    },
-    null,
-    this
-);
+
 //
 
     cursors = this.input.keyboard.createCursorKeys();
@@ -262,9 +246,27 @@ async function loadWorldData() {
     if (error || !data) {
         console.error("Error loading world:", error);
         return;
+    } else {
+        this.letterMessages = data.prompts.map(p => p.answer);
     }
-
-    this.letterMessages = data.prompts.map(p => p.answer);
+    //Lettter Placement
+    this.letters = placeLetters(this, [
+        {x: 140, y: 45},
+        {x: 350, y: 97},
+        {x: 33, y: 405},
+        {x: 443, y: 419},
+        {x: 446, y: 245},
+        {x: 342, y: 347}
+    ]);
+    this.physics.add.overlap(
+    this.player,
+    this.letters,
+    function(player, letter){
+        this.nearLetter = letter;
+    },
+    null,
+    this
+);
 
    
 }
