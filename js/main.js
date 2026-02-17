@@ -430,14 +430,14 @@ function openPrompt() {
 
     // Question text (bigger)
     this.promptQuestionText = this.add.text(
-        0, -containerHeight / 2 +3,
+        10, -containerHeight / 2 +1,
         question,
         {
             fontSize: '16px',
             color: '#000',
             fontStyle: 'bold',
             align: 'center',
-            wordWrap: { width: 220 }
+            wordWrap: { width: 250 }
         }
     )
     .setOrigin(0.5, 0)
@@ -446,7 +446,7 @@ function openPrompt() {
 
     // Answer text (smaller, below question)
     this.promptAnswerText = this.add.text(
-        0, this.promptQuestionText.height + 5 - containerHeight / 2,
+        10, this.promptQuestionText.height + 5 - containerHeight / 2,
         answer,
         {
             fontSize: '13px',
