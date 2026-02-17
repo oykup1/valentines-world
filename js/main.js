@@ -413,7 +413,7 @@ function openPrompt() {
         .setScrollFactor(0);
 
     // Use image size to define text area
-    const textWidth = this.promptImage.displayWidth * 0.6;
+    const textWidth = this.promptImage.displayWidth * 1;
 
     // Container centered
     this.promptContainer = this.add.container(centerX, centerY)
@@ -440,10 +440,11 @@ function openPrompt() {
     // ANSWER
     const answerText = this.add.text(
         0,
-        questionText.y + questionText.height + 20,
+        questionText.y + questionText.height + 5,
         answer,
         {
             fontSize: '16px',
+            fontWeight: '20px',
             color: '#000000',
             align: 'center',
             wordWrap: { width: textWidth }
