@@ -402,7 +402,7 @@ function openPrompt() {
 
     const centerX = this.cameras.main.width / 2;
     const centerY = this.cameras.main.height / 2;
-   h
+   
     // Overlay background
     this.overlay = this.add.rectangle(
         0, 0,
