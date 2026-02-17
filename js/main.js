@@ -442,9 +442,7 @@ this.promptContainer.y = centerY - containerHeight / 2;
         wordWrap: { width: textWidth }
     }
     )
-    .setOrigin(0.5, 0)
-    .setFixedSize(textWidth, 0);
-
+    .setOrigin(0.5, 0);
 // ANSWER (placed under question dynamically)
     this.promptAnswerText = this.add.text(
     0,
@@ -457,9 +455,7 @@ this.promptContainer.y = centerY - containerHeight / 2;
         wordWrap: { width: textWidth }
     }
     )
-    .setOrigin(0.5, 0)
-    .setFixedSize(textWidth, 0);
-
+    .setOrigin(0.5, 0);
     this.promptContainer.add([
     this.promptQuestionText,
     this.promptAnswerText
