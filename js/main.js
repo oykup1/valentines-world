@@ -418,9 +418,9 @@ function openPrompt() {
         this.cameras.main.centerY,
         'prompt'
     )
+    .setOrigin(0.5,0.5)
     .setDepth(1001)
-    .setScale(0.3)
-    .setOrigin(0.5,0.5);
+    .setScale(0.3);
     // Create a container to hold text
     const containerHeight = 80; // visible height of the scroll content
     this.promptContainer = this.add.container(
