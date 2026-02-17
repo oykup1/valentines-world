@@ -437,7 +437,7 @@ function openPrompt() {
             color: '#000',
             fontStyle: 'bold',
             align: 'center',
-            wordWrap: { width: 300 }
+            wordWrap: { width: 200 }
         }
     )
     .setOrigin(0.5, 0);
