@@ -430,7 +430,7 @@ function openPrompt() {
 
     // Question text (bigger)
     this.promptQuestionText = this.add.text(
-        10, -containerHeight / 2 +1,
+        10, -containerHeight / 2 +15,
         question,
         {
             fontSize: '16px',
