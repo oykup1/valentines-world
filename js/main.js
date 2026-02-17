@@ -425,7 +425,8 @@ function openPrompt() {
     this.promptContainer = this.add.container(
         this.cameras.main.centerX,
         this.cameras.main.centerY
-    ).setDepth(1002);
+    ).setDepth(1002)
+    .setOrigin(0.5);
     
     // Add mouse wheel scroll
     this.input.on('wheel', (pointer, deltaX, deltaY, deltaZ) => {
