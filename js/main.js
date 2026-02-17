@@ -440,8 +440,7 @@ function openPrompt() {
             wordWrap: { width: 300 }
         }
     )
-    .setOrigin(0.5)
-    .setScale(0.4);
+    .setOrigin(0.5, 0);
 
     // Answer text (smaller, below question)
     this.promptAnswerText = this.add.text(
@@ -454,8 +453,7 @@ function openPrompt() {
             wordWrap: { width: 200 }
         }
     )
-    .setOrigin(0.5)
-    .setScale(0.4);
+    .setOrigin(0.5);
 
     // Add texts to container
     this.promptContainer.add([this.promptQuestionText, this.promptAnswerText]);
@@ -505,7 +503,9 @@ function closePrompt() {
 
     if (this.overlay) this.overlay.destroy();
     if (this.promptImage) this.promptImage.destroy();
-    if (this.promptText) this.promptText.destroy();
+    if (this.promptQuestionText) this.promptQuestionText.destroy();
+    if (this.promptAnswerText) this.promptAnswerText.destroy();
+
 }
 /* ===================== PATH GENERATION ===================== */
 
