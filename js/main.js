@@ -400,6 +400,9 @@ function openPrompt() {
         this.nearLetter = null;
     }
 
+    const centerX = this.cameras.main.width / 2;
+    const centerY = this.cameras.main.height / 2;
+
     // Overlay background
     this.overlay = this.add.rectangle(
         0, 0,
@@ -413,45 +416,21 @@ function openPrompt() {
     .setDepth(1000);
 
     // Scroll image
-    this.promptImage = this.add.image(
-        this.cameras.main.centerX,
-        this.cameras.main.centerY,
-        'prompt'
-    )
-    .setOrigin(0.5, 0.5)
-    .setScale(0.3)
-    .setDepth(1001)
-    .setScrollFactor(0);
-    // Create a container to hold text
+    this.promptImage = this.add.image(centerX, centerY, 'prompt')
+        .setOrigin(0.5, 0.5)
+        .setScale(0.3)
+        .setDepth(1001)
+        .setScrollFactor(0);
+
+    // Container to hold text
     const containerHeight = 80; // visible height of the scroll content
-    this.promptContainer = this.add.container(
-        this.cameras.main.centerX,
-        this.cameras.main.centerY
-    )
-    .setDepth(1002)
-    .setScrollFactor(0);
-;
-    
-    // Add mouse wheel scroll
-    this.input.on('wheel', (pointer, deltaX, deltaY, deltaZ) => {
-    if (!this.promptOpen || !this.promptContainer) return;
+    this.promptContainer = this.add.container(centerX, centerY)
+        .setDepth(1002)
+        .setScrollFactor(0);
 
-    // deltaY > 0 means scrolling down, <0 means scrolling up
-    this.promptContainer.y -= deltaY * 0.2; // adjust speed multiplier
-    
-    // --- Clamp boundaries ---
-    const textHeight = this.promptContainer.getAll().reduce((h, t) => h + t.height + 5, 0);
-    const visibleHeight = 80; // same height as your mask
-    const minY = this.cameras.main.centerY - (textHeight - visibleHeight) / 2;
-    const maxY = this.cameras.main.centerY;
-
-    if (this.promptContainer.y < minY) this.promptContainer.y = minY;
-    if (this.promptContainer.y > maxY) this.promptContainer.y = maxY;
-    });
-    
     // Question text (bigger)
     this.promptQuestionText = this.add.text(
-         0, -containerHeight/2, // relative to container center
+        0, -containerHeight / 2,
         question,
         {
             fontSize: '18px',
@@ -462,12 +441,11 @@ function openPrompt() {
         }
     )
     .setOrigin(0.5)
-    .setDepth(1002)
     .setScale(0.4);
 
     // Answer text (smaller, below question)
     this.promptAnswerText = this.add.text(
-        0, this.promptQuestionText.height + 5 - containerHeight/2,
+        0, this.promptQuestionText.height + 5 - containerHeight / 2,
         answer,
         {
             fontSize: '14px',
@@ -477,24 +455,40 @@ function openPrompt() {
         }
     )
     .setOrigin(0.5)
-    .setDepth(1002)
     .setScale(0.4);
+
+    // Add texts to container
     this.promptContainer.add([this.promptQuestionText, this.promptAnswerText]);
 
     // Mask so text outside the scroll doesn't show
-    const maskShape = this.add.graphics();
+    const maskShape = this.add.graphics()
+        .setScrollFactor(0); // important: mask must not scroll with world
     maskShape.fillStyle(0xffffff);
     maskShape.fillRect(
-        this.cameras.main.centerX - 90, // left
-        this.cameras.main.centerY - containerHeight/2, // top
-        180, // width
-        containerHeight // height
+        centerX - 90,          // left
+        centerY - containerHeight / 2, // top
+        180,                   // width
+        containerHeight        // height
     );
     const mask = maskShape.createGeometryMask();
     this.promptContainer.setMask(mask);
 
-    // Optional: scroll speed and keys
-    this.scrollSpeed = 1; // pixels per frame
+    // Mouse wheel scroll
+    this.input.on('wheel', (pointer, deltaX, deltaY) => {
+        if (!this.promptOpen || !this.promptContainer) return;
+
+        this.promptContainer.y -= deltaY * 0.2; // adjust scroll speed
+
+        // Clamp boundaries
+        const textHeight = this.promptContainer.getAll().reduce((h, t) => h + t.height + 5, 0);
+        const minY = centerY - (textHeight - containerHeight) / 2;
+        const maxY = centerY;
+        if (this.promptContainer.y < minY) this.promptContainer.y = minY;
+        if (this.promptContainer.y > maxY) this.promptContainer.y = maxY;
+    });
+
+    // Optional: arrow keys scrolling
+    this.scrollSpeed = 1;
     this.scrollKeys = this.input.keyboard.addKeys({
         up: Phaser.Input.Keyboard.KeyCodes.W,
         down: Phaser.Input.Keyboard.KeyCodes.S
