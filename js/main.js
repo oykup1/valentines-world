@@ -444,7 +444,7 @@ function openPrompt() {
         answer,
         {
             fontSize: '18px',
-            fontStyle: 'bold',
+           // fontStyle: 'bold',
             color: '#000000',
             align: 'center',
             wordWrap: { width: textWidth }
