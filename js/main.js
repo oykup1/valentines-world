@@ -434,6 +434,7 @@ function openPrompt() {
         }
     )
     .setOrigin(0.5, 0.5)
+    .setScale(0.4)
     .setResolution(1);
 
     // ANSWER
@@ -449,6 +450,7 @@ function openPrompt() {
         }
     )
     .setOrigin(0.5, 0)
+    .setScale(0.25)
     .setResolution(1);
 
     this.promptContainer.add([questionText, answerText]);
