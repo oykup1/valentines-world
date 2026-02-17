@@ -435,7 +435,7 @@ function openPrompt() {
     -containerHeight / 2 + 10, // start near top of visible area
     question,
     {
-        fontSize: '16px',
+        fontSize: '10px',
         color: '#000',
         fontStyle: 'bold',
         align: 'center',
@@ -451,7 +451,7 @@ function openPrompt() {
     this.promptQuestionText.y + this.promptQuestionText.height + 10,
     answer,
     {
-        fontSize: '13px',
+        fontSize: '8px',
         color: '#000',
         align: 'center',
         wordWrap: { width: textWidth }
