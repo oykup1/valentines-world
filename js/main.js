@@ -402,8 +402,7 @@ function openPrompt() {
 
     const centerX = this.cameras.main.width / 2;
     const centerY = this.cameras.main.height / 2;
-    const containerHeight = 200; // 👈 PUT IT HERE
-    const textWidth = 180;       // make sure this matches your mask width
+   h
     // Overlay background
     this.overlay = this.add.rectangle(
         0, 0,
@@ -422,7 +421,8 @@ function openPrompt() {
         .setScale(0.31)
         .setDepth(1001)
         .setScrollFactor(0);
-
+const containerHeight = this.promptImage.displayHeight * 0.6;
+const textWidth = this.promptImage.displayWidth * 0.6;
 //container
     this.promptContainer = this.add.container(centerX, centerY)
     .setDepth(1002)
@@ -435,7 +435,7 @@ this.promptContainer.y = centerY - containerHeight / 2;
     0,
     question,
     {
-        fontSize: '10px',
+        fontSize: '14px',
         color: '#000',
         fontStyle: 'bold',
         align: 'center',
@@ -451,7 +451,7 @@ this.promptContainer.y = centerY - containerHeight / 2;
     this.promptQuestionText.y + this.promptQuestionText.height + 10,
     answer,
     {
-        fontSize: '8px',
+        fontSize: '12px',
         color: '#000',
         align: 'center',
         wordWrap: { width: textWidth }
