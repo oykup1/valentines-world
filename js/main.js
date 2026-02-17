@@ -233,8 +233,7 @@ this.loadWorldData();
 
 async function loadWorldData() {
 
-    const worldId = '0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab';
-    //window.location.pathname.split("/game/")[1];
+    const worldId = window.location.pathname.split("/game/")[1];
 
     if (!worldId) return;
 
