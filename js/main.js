@@ -419,15 +419,15 @@ function openPrompt() {
         'prompt'
     )
     .setDepth(1001)
-    .setScale(0.3);
+    .setScale(0.3)
+    .setOrigin(0.5,0.5);
     // Create a container to hold text
     const containerHeight = 80; // visible height of the scroll content
     this.promptContainer = this.add.container(
         this.cameras.main.centerX,
         this.cameras.main.centerY
     )
-    .setDepth(1002)
-    .setOrigin(0.5);
+    .setDepth(1002);
     
     // Add mouse wheel scroll
     this.input.on('wheel', (pointer, deltaX, deltaY, deltaZ) => {
