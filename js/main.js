@@ -422,79 +422,79 @@ function openPrompt() {
         .setDepth(1001)
         .setScrollFactor(0);
 
-    // Container to hold text
-    const containerHeight = 80; // visible height of the scroll content
+    const containerHeight = 100;
+    const textWidth = 180; // must match mask width
+
     this.promptContainer = this.add.container(centerX, centerY)
-        .setDepth(1002)
-        .setScrollFactor(0);
+    .setDepth(1002)
+    .setScrollFactor(0);
 
-    // Question text (bigger)
+// QUESTION
     this.promptQuestionText = this.add.text(
-        10, 0.5,
-        question,
-        {
-            fontSize: '16px',
-            color: '#000',
-            fontStyle: 'bold',
-            align: 'center',
-            wordWrap: { width: 250 }
-        }
+    0,
+    -containerHeight / 2 + 10, // start near top of visible area
+    question,
+    {
+        fontSize: '16px',
+        color: '#000',
+        fontStyle: 'bold',
+        align: 'center',
+        wordWrap: { width: textWidth }
+    }
     )
-    .setOrigin(0.5,0)
-    .setScale(0.4)
-    .setFixedSize(300, 0);
+    .setOrigin(0.5, 0)
+    .setFixedSize(textWidth, 0);
 
-    // Answer text (smaller, below question)
+// ANSWER (placed under question dynamically)
     this.promptAnswerText = this.add.text(
-        10, 5,
-        answer,
-        {
-            fontSize: '13px',
-            color: '#000',
-            align: 'center',
-            wordWrap: { width: 200 }
-        }
+    0,
+    this.promptQuestionText.y + this.promptQuestionText.height + 10,
+    answer,
+    {
+        fontSize: '13px',
+        color: '#000',
+        align: 'center',
+        wordWrap: { width: textWidth }
+    }
     )
-    .setOrigin(0.5)
-    .setScale(0.3)
-    .setFixedSize(200, 0);
+    .setOrigin(0.5, 0)
+    .setFixedSize(textWidth, 0);
 
-    // Add texts to container
-    this.promptContainer.add([this.promptQuestionText, this.promptAnswerText]);
-
-    // Mask so text outside the scroll doesn't show
-    const maskShape = this.add.graphics()
-        .setScrollFactor(0); // important: mask must not scroll with world
-    maskShape.fillStyle(0xffffff,0);
+    this.promptContainer.add([
+    this.promptQuestionText,
+    this.promptAnswerText
+]);
+    const maskShape = this.add.graphics().setScrollFactor(0);
+    maskShape.fillStyle(0xffffff, 0);
     maskShape.fillRect(
-        centerX - 90,          // left
-        centerY - containerHeight / 2, // top
-        180,                   // width
-        containerHeight        // height
-    );
-    const mask = maskShape.createGeometryMask();
-    this.promptContainer.setMask(mask);
+    centerX - textWidth / 2,
+    centerY - containerHeight / 2,
+    textWidth,
+    containerHeight
+);
+    this.promptContainer.setMask(maskShape.createGeometryMask());
+    // Calculate total content height ONCE
+    const contentHeight =
+    this.promptAnswerText.y +
+    this.promptAnswerText.height;
+
+    const maxOffset = Math.max(0, contentHeight - containerHeight);
+
+    // Scroll offset tracker
+    this.promptScrollOffset = 0;
 
     // Mouse wheel scroll
     this.input.on('wheel', (pointer, deltaX, deltaY) => {
-        if (!this.promptOpen || !this.promptContainer) return;
+    if (!this.promptOpen) return;
 
-        this.promptContainer.y -= deltaY * 0.2; // adjust scroll speed
+    this.promptScrollOffset += deltaY * 0.5;
 
-        // Clamp boundaries
-        const textHeight = this.promptContainer.getAll().reduce((h, t) => h + t.height + 5, 0);
-        const minY = centerY - (textHeight - containerHeight) / 2;
-        const maxY = centerY;
-        if (this.promptContainer.y < minY) this.promptContainer.y = minY;
-        if (this.promptContainer.y > maxY) this.promptContainer.y = maxY;
-    });
+    // Clamp scroll offset
+    if (this.promptScrollOffset < 0) this.promptScrollOffset = 0;
+    if (this.promptScrollOffset > maxOffset) this.promptScrollOffset = maxOffset;
 
-    // Optional: arrow keys scrolling
-    this.scrollSpeed = 1;
-    this.scrollKeys = this.input.keyboard.addKeys({
-        up: Phaser.Input.Keyboard.KeyCodes.W,
-        down: Phaser.Input.Keyboard.KeyCodes.S
-    });
+    this.promptContainer.y = centerY - this.promptScrollOffset;
+});
 }
 
 
