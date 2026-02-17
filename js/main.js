@@ -462,7 +462,7 @@ function openPrompt() {
 
     // Answer text (smaller, below question)
     this.promptAnswerText = this.add.text(
-        0, promptQuestionText.height + 5 - containerHeight/2,
+        0, this.promptQuestionText.height + 5 - containerHeight/2,
         answer,
         {
             fontSize: '14px',
