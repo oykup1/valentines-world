@@ -433,27 +433,31 @@ function openPrompt() {
         0, -containerHeight / 2 +6,
         question,
         {
-            fontSize: '6px',
+            fontSize: '16px',
             color: '#000',
             fontStyle: 'bold',
             align: 'center',
             wordWrap: { width: 200 }
         }
     )
-    .setOrigin(0.5, 0);
+    .setOrigin(0.5, 0)
+    .setScale(0.4)
+    .setFixedSize(200, 0);
 
     // Answer text (smaller, below question)
     this.promptAnswerText = this.add.text(
         0, this.promptQuestionText.height + 5 - containerHeight / 2,
         answer,
         {
-            fontSize: '2px',
+            fontSize: '12px',
             color: '#000',
             align: 'center',
             wordWrap: { width: 200 }
         }
     )
-    .setOrigin(0.5);
+    .setOrigin(0.5)
+    .setScale(0.2)
+    .setFixedSize(200, 0);
 
     // Add texts to container
     this.promptContainer.add([this.promptQuestionText, this.promptAnswerText]);
