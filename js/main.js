@@ -462,7 +462,7 @@ function openPrompt() {
 
     // Answer text (smaller, below question)
     this.promptAnswerText = this.add.text(
-        0, questionText.height + 5 - containerHeight/2,
+        0, promptQuestionText.height + 5 - containerHeight/2,
         answer,
         {
             fontSize: '14px',
@@ -474,7 +474,7 @@ function openPrompt() {
     .setOrigin(0.5)
     .setDepth(1002)
     .setScale(0.4);
-    this.promptContainer.add([questionText, answerText]);
+    this.promptContainer.add([this.promptQuestionText, this.promptAnswerText]);
 
     // Mask so text outside the scroll doesn't show
     const maskShape = this.add.graphics();
