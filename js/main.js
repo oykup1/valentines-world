@@ -402,7 +402,8 @@ function openPrompt() {
 
     const centerX = this.cameras.main.width / 2;
     const centerY = this.cameras.main.height / 2;
-
+    const containerHeight = 200; // 👈 PUT IT HERE
+    const textWidth = 180;       // make sure this matches your mask width
     // Overlay background
     this.overlay = this.add.rectangle(
         0, 0,
@@ -422,17 +423,16 @@ function openPrompt() {
         .setDepth(1001)
         .setScrollFactor(0);
 
-    const containerHeight = 100;
-    const textWidth = 180; // must match mask width
-
+//container
     this.promptContainer = this.add.container(centerX, centerY)
     .setDepth(1002)
     .setScrollFactor(0);
+this.promptContainer.y = centerY - containerHeight / 2;
 
 // QUESTION
     this.promptQuestionText = this.add.text(
     0,
-    -containerHeight / 2 + 10, // start near top of visible area
+    0,
     question,
     {
         fontSize: '10px',
@@ -464,6 +464,17 @@ function openPrompt() {
     this.promptQuestionText,
     this.promptAnswerText
 ]);
+// Calculate content height AFTER text exists
+const contentHeight =
+    this.promptAnswerText.y +
+    this.promptAnswerText.height;
+
+this.promptMaxOffset = Math.max(0, contentHeight - containerHeight);
+this.promptScrollOffset = 0;
+
+console.log("Max offset:", this.promptMaxOffset);
+
+
     const maskShape = this.add.graphics().setScrollFactor(0);
     maskShape.fillStyle(0xffffff, 0);
     maskShape.fillRect(
@@ -473,28 +484,26 @@ function openPrompt() {
     containerHeight
 );
     this.promptContainer.setMask(maskShape.createGeometryMask());
-    // Calculate total content height ONCE
-    const contentHeight =
-    this.promptAnswerText.y +
-    this.promptAnswerText.height;
+    
 
-    const maxOffset = Math.max(0, contentHeight - containerHeight);
+    this.input.off('wheel');
 
-    // Scroll offset tracker
-    this.promptScrollOffset = 0;
+this.input.on('wheel', (pointer, deltaX, deltaY) => {
 
-    // Mouse wheel scroll
-    this.input.on('wheel', (pointer, deltaX, deltaY) => {
     if (!this.promptOpen) return;
+    if (this.promptMaxOffset <= 0) return;
 
     this.promptScrollOffset += deltaY * 0.5;
 
-    // Clamp scroll offset
-    if (this.promptScrollOffset < 0) this.promptScrollOffset = 0;
-    if (this.promptScrollOffset > maxOffset) this.promptScrollOffset = maxOffset;
+    if (this.promptScrollOffset < 0)
+        this.promptScrollOffset = 0;
 
-    this.promptContainer.y = centerY - this.promptScrollOffset;
-});
+    if (this.promptScrollOffset > this.promptMaxOffset)
+        this.promptScrollOffset = this.promptMaxOffset;
+
+    this.promptContainer.y =
+    (centerY - containerHeight / 2) - this.promptScrollOffset;
+ });
 }
 
 
