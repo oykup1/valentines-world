@@ -418,7 +418,7 @@ function openPrompt() {
     // Scroll image
     this.promptImage = this.add.image(centerX, centerY, 'prompt')
         .setOrigin(0.5, 0.5)
-        .setScale(0.3)
+        .setScale(0.31)
         .setDepth(1001)
         .setScrollFactor(0);
 
@@ -433,7 +433,7 @@ function openPrompt() {
         0, -containerHeight / 2,
         question,
         {
-            fontSize: '18px',
+            fontSize: '16px',
             color: '#000',
             fontStyle: 'bold',
             align: 'center',
@@ -448,7 +448,7 @@ function openPrompt() {
         0, this.promptQuestionText.height + 5 - containerHeight / 2,
         answer,
         {
-            fontSize: '14px',
+            fontSize: '12px',
             color: '#000',
             align: 'center',
             wordWrap: { width: 200 }
@@ -463,7 +463,7 @@ function openPrompt() {
     // Mask so text outside the scroll doesn't show
     const maskShape = this.add.graphics()
         .setScrollFactor(0); // important: mask must not scroll with world
-    maskShape.fillStyle(0xffffff);
+    maskShape.fillStyle(0xffffff,0);
     maskShape.fillRect(
         centerX - 90,          // left
         centerY - containerHeight / 2, // top
