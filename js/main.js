@@ -285,6 +285,14 @@ function update() {
 
         return;
     }
+    //Prompt Container
+    if (this.promptOpen && this.promptContainer) {
+    if (this.scrollKeys.up.isDown) {
+        this.promptContainer.y += this.scrollSpeed;
+    } else if (this.scrollKeys.down.isDown) {
+        this.promptContainer.y -= this.scrollSpeed;
+    }
+    }
 // Show Press E icon
 if (this.nearLetter && !this.promptOpen) {
 
@@ -371,24 +379,28 @@ function openPrompt() {
 
      this.promptOpen = true;
 
+    // Stop player
     this.player.body.setVelocity(0);
     this.player.body.enable = false;
 
+    // Get the question + answer object
     const promptData = this.nearLetter?.getData('prompts');
-
     const question = promptData?.question || "";
     const answer = promptData?.answer || "";
 
+    // Remove Press E icon if it exists
     if (this.pressEIcon) {
         this.pressEIcon.destroy();
         this.pressEIcon = null;
     }
 
+    // Remove the letter after opening
     if (this.nearLetter) {
         this.nearLetter.destroy();
         this.nearLetter = null;
     }
 
+    // Overlay background
     this.overlay = this.add.rectangle(
         0, 0,
         this.scale.width,
@@ -400,32 +412,91 @@ function openPrompt() {
     .setScrollFactor(0)
     .setDepth(1000);
 
+    // Scroll image
     this.promptImage = this.add.image(
         this.cameras.main.centerX,
         this.cameras.main.centerY,
         'prompt'
     )
-    .setScrollFactor(0)
     .setDepth(1001)
-    .setScale(0.32);
+    .setScale(0.3);
+    // Create a container to hold text
+    const containerHeight = 80; // visible height of the scroll content
+    this.promptContainer = this.add.container(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY
+    ).setDepth(1002);
+    
+    // Add mouse wheel scroll
+    this.input.on('wheel', (pointer, deltaX, deltaY, deltaZ) => {
+    if (!this.promptOpen || !this.promptContainer) return;
 
-    this.promptText = this.add.text(
-    this.cameras.main.centerX,
-    this.cameras.main.centerY,
-    question + "\n\n" + answer,
-    {
-        fontSize: '14px',
-        color: '#000',
-        align: 'center',
-        wordWrap: { width: 200 }
-    }
+    // deltaY > 0 means scrolling down, <0 means scrolling up
+    this.promptContainer.y -= deltaY * 0.2; // adjust speed multiplier
+    
+    // --- Clamp boundaries ---
+    const textHeight = this.promptContainer.getAll().reduce((h, t) => h + t.height + 5, 0);
+    const visibleHeight = 80; // same height as your mask
+    const minY = this.cameras.main.centerY - (textHeight - visibleHeight) / 2;
+    const maxY = this.cameras.main.centerY;
+
+    if (this.promptContainer.y < minY) this.promptContainer.y = minY;
+    if (this.promptContainer.y > maxY) this.promptContainer.y = maxY;
+    });
+    
+    // Question text (bigger)
+    this.promptQuestionText = this.add.text(
+         0, -containerHeight/2, // relative to container center
+        question,
+        {
+            fontSize: '18px',
+            color: '#000',
+            fontStyle: 'bold',
+            align: 'center',
+            wordWrap: { width: 200 }
+        }
     )
     .setOrigin(0.5)
-    .setScrollFactor(0)
     .setDepth(1002)
     .setScale(0.4);
 
+    // Answer text (smaller, below question)
+    this.promptAnswerText = this.add.text(
+        0, questionText.height + 5 - containerHeight/2,
+        answer,
+        {
+            fontSize: '14px',
+            color: '#000',
+            align: 'center',
+            wordWrap: { width: 200 }
+        }
+    )
+    .setOrigin(0.5)
+    .setDepth(1002)
+    .setScale(0.4);
+    this.promptContainer.add([questionText, answerText]);
+
+    // Mask so text outside the scroll doesn't show
+    const maskShape = this.add.graphics();
+    maskShape.fillStyle(0xffffff);
+    maskShape.fillRect(
+        this.cameras.main.centerX - 90, // left
+        this.cameras.main.centerY - containerHeight/2, // top
+        180, // width
+        containerHeight // height
+    );
+    const mask = maskShape.createGeometryMask();
+    this.promptContainer.setMask(mask);
+
+    // Optional: scroll speed and keys
+    this.scrollSpeed = 1; // pixels per frame
+    this.scrollKeys = this.input.keyboard.addKeys({
+        up: Phaser.Input.Keyboard.KeyCodes.W,
+        down: Phaser.Input.Keyboard.KeyCodes.S
+    });
 }
+
+
 function closePrompt() {
 
     this.promptOpen = false;
