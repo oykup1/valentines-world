@@ -233,7 +233,8 @@ this.loadWorldData();
 
 async function loadWorldData() {
 
-    const worldId = window.location.pathname.split("/game/")[1];
+    const worldId = '0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab';
+    //window.location.pathname.split("/game/")[1];
 
     if (!worldId) return;
 
@@ -413,7 +414,7 @@ function openPrompt() {
         .setScrollFactor(0);
 
     // Use image size to define text area
-    const textWidth = this.promptImage.displayWidth * 1;
+    const textWidth = this.promptImage.displayWidth * 1.5;
 
     // Container centered
     this.promptContainer = this.add.container(centerX, centerY)
@@ -422,8 +423,8 @@ function openPrompt() {
 
     // QUESTION
     const questionText = this.add.text(
-        30,
-        -this.promptImage.displayHeight * 0.2,
+        10,
+        -this.promptImage.displayHeight * 0.15,
         question,
         {
             fontSize: '18px',
@@ -439,12 +440,12 @@ function openPrompt() {
 
     // ANSWER
     const answerText = this.add.text(
-        30,
-        -this.promptImage.displayHeight * 2,
+        8,
+        -this.promptImage.displayHeight * 0.1,
         answer,
         {
-            fontSize: '16px',
-            fontWeight: '20px',
+            fontSize: '18px',
+            fontStyle: 'bold',
             color: '#000000',
             align: 'center',
             wordWrap: { width: textWidth }
@@ -468,8 +469,8 @@ function closePrompt() {
 
     if (this.overlay) this.overlay.destroy();
     if (this.promptImage) this.promptImage.destroy();
-    if (this.promptQuestionText) this.promptQuestionText.destroy();
-    if (this.promptAnswerText) this.promptAnswerText.destroy();
+    if (this.promptContainer) this.promptContainer.destroy();
+
 
 }
 /* ===================== PATH GENERATION ===================== */
