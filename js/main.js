@@ -433,7 +433,7 @@ function openPrompt() {
         0, -containerHeight / 2 +6,
         question,
         {
-            fontSize: '16px',
+            fontSize: '6px',
             color: '#000',
             fontStyle: 'bold',
             align: 'center',
@@ -447,7 +447,7 @@ function openPrompt() {
         0, this.promptQuestionText.height + 5 - containerHeight / 2,
         answer,
         {
-            fontSize: '12px',
+            fontSize: '2px',
             color: '#000',
             align: 'center',
             wordWrap: { width: 200 }
