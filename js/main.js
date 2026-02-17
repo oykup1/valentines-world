@@ -430,14 +430,14 @@ function openPrompt() {
 
     // Question text (bigger)
     this.promptQuestionText = this.add.text(
-        0, -containerHeight / 2 +5,
+        0, -containerHeight / 2 +8,
         question,
         {
             fontSize: '16px',
             color: '#000',
             fontStyle: 'bold',
             align: 'center',
-            wordWrap: { width: 200 }
+            wordWrap: { width: 300 }
         }
     )
     .setOrigin(0.5)
