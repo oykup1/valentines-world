@@ -423,7 +423,7 @@ function openPrompt() {
         .setScrollFactor(0);
 
     // Container to hold text
-    const containerHeight = 80; // visible height of the scroll content
+    const containerHeight = 100; // visible height of the scroll content
     this.promptContainer = this.add.container(centerX, centerY)
         .setDepth(1002)
         .setScrollFactor(0);
