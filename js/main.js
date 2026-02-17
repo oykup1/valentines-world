@@ -285,14 +285,7 @@ function update() {
 
         return;
     }
-    //Prompt Container
-    if (this.promptOpen && this.promptContainer) {
-    if (this.scrollKeys.up.isDown) {
-        this.promptContainer.y += this.scrollSpeed;
-    } else if (this.scrollKeys.down.isDown) {
-        this.promptContainer.y -= this.scrollSpeed;
-    }
-    }
+   
 // Show Press E icon
 if (this.nearLetter && !this.promptOpen) {
 
@@ -377,33 +370,30 @@ if (!moving) {
 }
 function openPrompt() {
 
-     this.promptOpen = true;
+       this.promptOpen = true;
 
     // Stop player
     this.player.body.setVelocity(0);
     this.player.body.enable = false;
 
-    // Get the question + answer object
     const promptData = this.nearLetter?.getData('prompts');
     const question = promptData?.question || "";
     const answer = promptData?.answer || "";
 
-    // Remove Press E icon if it exists
     if (this.pressEIcon) {
         this.pressEIcon.destroy();
         this.pressEIcon = null;
     }
 
-    // Remove the letter after opening
     if (this.nearLetter) {
         this.nearLetter.destroy();
         this.nearLetter = null;
     }
 
-    const centerX = this.cameras.main.width / 2;
-    const centerY = this.cameras.main.height / 2;
-   
-    // Overlay background
+    const centerX = Math.floor(this.cameras.main.width / 2);
+    const centerY = Math.floor(this.cameras.main.height / 2);
+
+    // Overlay
     this.overlay = this.add.rectangle(
         0, 0,
         this.scale.width,
@@ -417,89 +407,52 @@ function openPrompt() {
 
     // Scroll image
     this.promptImage = this.add.image(centerX, centerY, 'prompt')
-        .setOrigin(0.5, 0.5)
+        .setOrigin(0.5)
         .setScale(0.31)
         .setDepth(1001)
         .setScrollFactor(0);
-const containerHeight = this.promptImage.displayHeight * 0.6;
-const textWidth = this.promptImage.displayWidth * 0.6;
-//container
+
+    // Use image size to define text area
+    const textWidth = this.promptImage.displayWidth * 0.6;
+
+    // Container centered
     this.promptContainer = this.add.container(centerX, centerY)
-    .setDepth(1002)
-    .setScrollFactor(0);
-this.promptContainer.y = centerY - containerHeight / 2;
+        .setDepth(1002)
+        .setScrollFactor(0);
 
-// QUESTION
-    this.promptQuestionText = this.add.text(
-    0,
-    0,
-    question,
-    {
-        fontSize: '14px',
-        color: '#000',
-        fontStyle: 'bold',
-        align: 'center',
-        wordWrap: { width: textWidth }
-    }
+    // QUESTION
+    const questionText = this.add.text(
+        0,
+        -this.promptImage.displayHeight * 0.2,
+        question,
+        {
+            fontSize: '18px',
+            color: '#000000',
+            fontStyle: 'bold',
+            align: 'center',
+            wordWrap: { width: textWidth }
+        }
     )
-    .setOrigin(0.5, 0);
-// ANSWER (placed under question dynamically)
-    this.promptAnswerText = this.add.text(
-    0,
-    this.promptQuestionText.y + this.promptQuestionText.height + 10,
-    answer,
-    {
-        fontSize: '12px',
-        color: '#000',
-        align: 'center',
-        wordWrap: { width: textWidth }
-    }
+    .setOrigin(0.5, 0.5)
+    .setResolution(1);
+
+    // ANSWER
+    const answerText = this.add.text(
+        0,
+        questionText.y + questionText.height + 20,
+        answer,
+        {
+            fontSize: '16px',
+            color: '#000000',
+            align: 'center',
+            wordWrap: { width: textWidth }
+        }
     )
-    .setOrigin(0.5, 0);
-    this.promptContainer.add([
-    this.promptQuestionText,
-    this.promptAnswerText
-]);
-// Calculate content height AFTER text exists
-const contentHeight =
-    this.promptAnswerText.y +
-    this.promptAnswerText.height;
+    .setOrigin(0.5, 0)
+    .setResolution(1);
 
-this.promptMaxOffset = Math.max(0, contentHeight - containerHeight);
-this.promptScrollOffset = 0;
+    this.promptContainer.add([questionText, answerText]);
 
-console.log("Max offset:", this.promptMaxOffset);
-
-
-    const maskShape = this.add.graphics().setScrollFactor(0);
-    maskShape.fillStyle(0xffffff, 0);
-    maskShape.fillRect(
-    centerX - textWidth / 2,
-    centerY - containerHeight / 2,
-    textWidth,
-    containerHeight
-);
-    this.promptContainer.setMask(maskShape.createGeometryMask());
-    
-
-    this.input.off('wheel');
-
-this.input.on('wheel', (pointer, deltaX, deltaY) => {
-
-    if (!this.promptOpen) return;
-    if (this.promptMaxOffset <= 0) return;
-
-    this.promptScrollOffset += deltaY * 0.5;
-
-    if (this.promptScrollOffset < 0)
-        this.promptScrollOffset = 0;
-
-    if (this.promptScrollOffset > this.promptMaxOffset)
-        this.promptScrollOffset = this.promptMaxOffset;
-
-    this.promptContainer.y =
-    (centerY - containerHeight / 2) - this.promptScrollOffset;
- });
 }
 
 
