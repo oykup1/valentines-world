@@ -422,7 +422,7 @@ function openPrompt() {
 
     // QUESTION
     const questionText = this.add.text(
-        0,
+        10,
         -this.promptImage.displayHeight * 0.2,
         question,
         {
@@ -439,8 +439,8 @@ function openPrompt() {
 
     // ANSWER
     const answerText = this.add.text(
-        0,
-        questionText.y + questionText.height + 5,
+        10,
+        20,
         answer,
         {
             fontSize: '16px',
