@@ -442,14 +442,14 @@ function openPrompt() {
     )
     .setOrigin(0.5, 0)
     .setScale(0.4)
-    .setFixedSize(200, 0);
+    .setFixedSize(300, 0);
 
     // Answer text (smaller, below question)
     this.promptAnswerText = this.add.text(
         0, this.promptQuestionText.height + 5 - containerHeight / 2,
         answer,
         {
-            fontSize: '12px',
+            fontSize: '13px',
             color: '#000',
             align: 'center',
             wordWrap: { width: 200 }
