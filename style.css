@@ -90,6 +90,115 @@ body::after {
   align-items: center;
   z-index: 10; /* Keep game on top */
 }
+/* Intro Overlay */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffcfee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.intro-overlay.hidden {
+  display: none;
+}
+
+.intro-popup {
+  background: #fef5e7;
+  border: 6px solid #d4668b;
+  padding: 32px 40px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(139, 69, 19, 0.3);
+  position: relative;
+  image-rendering: pixelated;
+}
+
+.popup-decoration {
+  color: #d4668b;
+  font-size: 18px;
+  margin: 8px 0;
+  opacity: 0.6;
+}
+
+.popup-title {
+  font-family: 'Silkscreen', monospace;
+  font-size: 22px;
+  color: #d4668b;
+  margin: 16px 0;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+  letter-spacing: 1px;
+}
+
+.popup-content {
+  margin: 24px 0;
+  font-family: 'Silkscreen', monospace;
+  font-size: 13px;
+  color: #8b6f47;
+  line-height: 1.8;
+}
+
+.popup-content p {
+  margin: 12px 0;
+}
+
+.highlight {
+  color: #d4668b;
+  font-weight: bold;
+}
+
+.popup-hint {
+  font-size: 11px;
+  margin-top: 20px;
+  padding: 8px 12px;
+  background: white;
+  border: 2px solid #e8d5c4;
+  display: inline-block;
+  opacity: 0.8;
+}
+
+.popup-hearts {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.popup-heart {
+  font-size: 20px;
+  animation: float 2s ease-in-out infinite;
+  opacity: 0.7;
+}
+
+.start-button {
+  font-family: 'Silkscreen', monospace;
+  font-size: 14px;
+  padding: 12px 32px;
+  background: #ff6b9d;
+  color: white;
+  border: 4px solid #d4668b;
+  cursor: pointer;
+  margin-top: 16px;
+  box-shadow: 0 4px 12px rgba(212, 102, 139, 0.3);
+  transition: none;
+  image-rendering: pixelated;
+}
+
+.start-button:hover {
+  background: #ff85ad;
+  transform: scale(1.05);
+}
+
+.start-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 6px rgba(212, 102, 139, 0.3);
+}
 
 #game-container canvas {
   display: block;
@@ -129,3 +238,4 @@ body::after {
   color: #d4668b;
   text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
 }
+

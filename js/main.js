@@ -89,7 +89,12 @@ this.load.image('forward_walk1', '/assets/player/forward_walk1.png');
 this.load.image('back', '/assets/player/back.png');
 this.load.image('back_walk', '/assets/player/back_walk.png');
 this.load.image('back_walk1', '/assets/player/back_walk1.png');}
-
+// Hide intro overlay and start game
+document.getElementById('start-game-btn').addEventListener('click', function() {
+  document.getElementById('intro-overlay').classList.add('hidden');
+  // Optional: unpause Phaser game if you paused it
+  // game.scene.resume('YourSceneName');
+});
  function create() {
     console.log("Create started");
     this.letterMessages = ["💌","💌","💌","💌","💌","💌"];
@@ -166,6 +171,10 @@ this.load.image('back_walk1', '/assets/player/back_walk1.png');}
     this.promptOpen = false;
     this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+    this.pressEIcon = this.add.image(0, 0, 'pressE')
+    .setDepth(999)
+    .setScale(0.09)
+    .setVisible(false);
    
 //
 
@@ -233,8 +242,8 @@ this.load.image('back_walk1', '/assets/player/back_walk1.png');}
 
 async function loadWorldData() {
 
-    //const worldId = window.location.pathname.split("/game/")[1];
-    const worldId = "0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab";
+    const worldId = window.location.pathname.split("/game/")[1];
+   // const worldId = "0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab";
     if (!worldId) return;
 
     const { data, error } = await supabaseClient
@@ -280,7 +289,6 @@ async function loadWorldData() {
 function update() {
      // Freeze everything when prompt is open
     if (!this.player) return;
-
     if (this.promptOpen) {
 
         if (Phaser.Input.Keyboard.JustDown(this.keyESC)) {
@@ -292,27 +300,17 @@ function update() {
    
 // Show Press E icon
 if (this.nearLetter && !this.promptOpen) {
-
-    if (!this.pressEIcon) {
-        this.pressEIcon = this.add.image(
-            this.nearLetter.x,
-            this.nearLetter.y +20,
-            'pressE'
-        )
-        .setDepth(999)
-        .setScale(0.09)
-        .setScrollFactor(1);
-    }
+    this.pressEIcon.setPosition(
+        this.nearLetter.x,
+        this.nearLetter.y + 20
+    );
+    this.pressEIcon.setVisible(true);
 
     if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
         openPrompt.call(this);
     }
-}
-else {
-    if (this.pressEIcon) {
-        this.pressEIcon.destroy();
-        this.pressEIcon = null;
-    }
+} else {
+    this.pressEIcon.setVisible(false);
 }
 
 
@@ -390,10 +388,7 @@ function openPrompt() {
         updateProgressBar(this);
     }
    
-    if (this.pressEIcon) {
-        this.pressEIcon.destroy();
-        this.pressEIcon = null;
-    }
+    
       if (this.nearLetter) {
         this.nearLetter.destroy();
         this.nearLetter = null;
@@ -432,39 +427,40 @@ function openPrompt() {
         .setScrollFactor(0);
 
     // QUESTION
-    const questionText = this.add.text(
-        8,
-        -this.promptImage.displayHeight * 0.15,
-        question,
-        {
-            fontSize: '18px',
-            color: '#000000',
-            fontStyle: 'bold',
-            align: 'center',
-            wordWrap: { width: textWidth }
-        }
-    )
-    .setOrigin(0.5, 0.5)
-    .setScale(0.4)
-    .setResolution(1);
+const questionText = this.add.text(
+    8,
+    -this.promptImage.displayHeight * 0.15,
+    question,
+    {
+        fontFamily: 'Silkscreen, monospace',
+        fontSize: '18px',
+        color: '#d4668b',
+        fontStyle: 'bold',
+        align: 'center',
+        wordWrap: { width: textWidth }
+    }
+)
+.setOrigin(0.5, 0.5)
+.setScale(0.4)
+.setResolution(1);
 
-    // ANSWER
-    const answerText = this.add.text(
-        8,
-        -this.promptImage.displayHeight * 0.1,
-        answer,
-        {
-            fontSize: '14px',
-           // fontStyle: 'bold',
-            color: '#000000',
-            align: 'center',
-            wordWrap: { width: textWidth },
-           // lineSpacing: 30
-        }
-    )
-    .setOrigin(0.5, 0)
-    .setScale(0.4)
-    .setResolution(1);
+// ANSWER
+const answerText = this.add.text(
+    8,
+    -this.promptImage.displayHeight * 0.1,
+    answer,
+    {
+        fontFamily: 'Silkscreen, monospace',
+        fontSize: '14px',
+        color: '#000000',
+        align: 'center',
+        wordWrap: { width: textWidth },
+        lineSpacing: 4
+    }
+)
+.setOrigin(0.5, 0)
+.setScale(0.4)
+.setResolution(1);
 
     this.promptContainer.add([questionText, answerText]);
     this.escHint = this.add.image(
