@@ -24,9 +24,9 @@ const config = {
     width: 320 * SCALE,
     height: 180 * SCALE,
     pixelArt: true,
-   // backgroundColor: 0xebb4d8,
     physics: { default: 'arcade', arcade: { gravity: { y:0 }, debug:false } },
-    scene: { preload, create, update }
+    scene: { preload, create, update },
+    parent: 'game-container',
 };
 
 new Phaser.Game(config);
@@ -62,6 +62,8 @@ function preload() {
     this.load.image('letter', '/assets/tiles/letter.png');
     this.load.image('prompt', '/assets/tiles/prompt.png');
     this.load.image('pressE', '/assets/tiles/PressE.png');
+    this.load.image('pressESC', '/assets/tiles/PressESC.png');
+
 
 
     
@@ -93,11 +95,8 @@ this.load.image('back_walk1', '/assets/player/back_walk1.png');}
     this.letterMessages = ["💌","💌","💌","💌","💌","💌"];
 
     rng = new Phaser.Math.RandomDataGenerator([WORLD_SEED]);
-    this.add.image(500, 250, 'background')
-    //.setOrigin(0)
-    .setScrollFactor(0)
-    .setDepth(-100)
-    .setScale(0.65);    
+     
+
     // Base grass
     for (let y = 0; y < WORLD_HEIGHT; y++) {
         world[y] = [];
@@ -121,8 +120,8 @@ this.load.image('back_walk1', '/assets/player/back_walk1.png');}
     this.trees = placeTrees(this);
     placeShrubs(this);
     placeFlowers(this);
+    
     // Player (start facing forward)
-
     this.player = this.physics.add.sprite(
         243,
         264,
@@ -163,78 +162,79 @@ this.load.image('back_walk1', '/assets/player/back_walk1.png');}
     placeRock(this, 426, 336);
 
 
-this.nearLetter = null;
-this.promptOpen = false;
-this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-
+    this.nearLetter = null;
+    this.promptOpen = false;
+    this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+   
 //
 
     cursors = this.input.keyboard.createCursorKeys();
     const worldPixelWidth = WORLD_WIDTH * TILE_SIZE;
     const worldPixelHeight = WORLD_HEIGHT * TILE_SIZE;
 
-this.physics.world.setBounds(0, 0, worldPixelWidth, worldPixelHeight);
-this.cameras.main.setBounds(0, 0, worldPixelWidth, worldPixelHeight);
+    this.physics.world.setBounds(0, 0, worldPixelWidth, worldPixelHeight);
+    this.cameras.main.setBounds(0, 0, worldPixelWidth, worldPixelHeight);
+  
     // Camera
     const cam = this.cameras.main;
     cam.startFollow(this.player);
     cam.setZoom(SCALE);
 
    // WALK RIGHT
-this.anims.create({
-    key: 'walk_right',
-    frames: [
+    this.anims.create({
+        key: 'walk_right',
+        frames: [
         { key: 'right_walk' },
         { key: 'right_walk1' },
         { key: 'right_walk2' }
-    ],
-    frameRate: 8,
-    repeat: -1
-});
+        ],
+        frameRate: 8,
+        repeat: -1
+    });
 
-// WALK LEFT
-this.anims.create({
-    key: 'walk_left',
-    frames: [
+    // WALK LEFT
+    this.anims.create({
+        key: 'walk_left',
+        frames: [
         { key: 'left_walk' },
         { key: 'left_walk1' },
         { key: 'left_walk2' }
-    ],
-    frameRate: 8,
-    repeat: -1
-});
+        ],
+        frameRate: 8,
+        repeat: -1
+    });
 
-// WALK FORWARD
-this.anims.create({
-    key: 'walk_forward',
-    frames: [
+    // WALK FORWARD
+    this.anims.create({
+     key: 'walk_forward',
+     frames: [
         { key: 'forward_walk' },
         { key: 'forward_walk1' }
-    ],
-    frameRate: 8,
-    repeat: -1
-});
+      ],
+     frameRate: 8,
+     repeat: -1
+    });
 
-// WALK BACK
-this.anims.create({
-    key: 'walk_back',
-    frames: [
+    // WALK BACK
+    this.anims.create({
+     key: 'walk_back',
+     frames: [
         { key: 'back_walk' },
         { key: 'back_walk1' }
-    ],
-    frameRate: 8,
-    repeat: -1
-});
-this.loadWorldData = loadWorldData.bind(this);
-this.loadWorldData();
+      ],
+      frameRate: 8,
+      repeat: -1
+    });
+    this.loadWorldData = loadWorldData.bind(this);
+    this.loadWorldData();
 }
 
 
 async function loadWorldData() {
 
-    const worldId = window.location.pathname.split("/game/")[1];
-
+    //const worldId = window.location.pathname.split("/game/")[1];
+    const worldId = "0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab";
     if (!worldId) return;
 
     const { data, error } = await supabaseClient
@@ -260,6 +260,7 @@ async function loadWorldData() {
         {x: 446, y: 245},
         {x: 342, y: 347}
     ]);
+    
     this.physics.add.overlap(
     this.player,
     this.letters,
@@ -269,6 +270,9 @@ async function loadWorldData() {
     null,
     this
 );
+    this.totalLetters = this.letters.getChildren().length;
+    this.lettersOpened = 0;
+    updateProgressBar.call(this);
 
    
 }
@@ -379,30 +383,37 @@ function openPrompt() {
     const promptData = this.nearLetter?.getData('prompts');
     const question = promptData?.question || "";
     const answer = promptData?.answer || "";
-
+     // Increment letters opened if the letter is new
+    if (!this.nearLetter.getData('opened')) {
+        this.nearLetter.setData('opened', true); // mark as opened
+        this.lettersOpened++;
+        updateProgressBar(this);
+    }
+   
     if (this.pressEIcon) {
         this.pressEIcon.destroy();
         this.pressEIcon = null;
     }
-
-    if (this.nearLetter) {
+      if (this.nearLetter) {
         this.nearLetter.destroy();
         this.nearLetter = null;
     }
 
+
     const centerX = Math.floor(this.cameras.main.width / 2);
     const centerY = Math.floor(this.cameras.main.height / 2);
-
-    // Overlay
+    const cam = this.cameras.main;
+    const view = cam.worldView;
+   //Overlay
     this.overlay = this.add.rectangle(
-        0, 0,
-        this.scale.width,
-        this.scale.height,
+        view.x,
+        view.y,
+        view.width,
+        view.height,
         0x000000,
         0.6
     )
     .setOrigin(0)
-    .setScrollFactor(0)
     .setDepth(1000);
 
     // Scroll image
@@ -413,7 +424,7 @@ function openPrompt() {
         .setScrollFactor(0);
 
     // Use image size to define text area
-    const textWidth = this.promptImage.displayWidth * 1.5;
+    const textWidth = this.promptImage.displayWidth * 1.3;
 
     // Container centered
     this.promptContainer = this.add.container(centerX, centerY)
@@ -422,7 +433,7 @@ function openPrompt() {
 
     // QUESTION
     const questionText = this.add.text(
-        10,
+        8,
         -this.promptImage.displayHeight * 0.15,
         question,
         {
@@ -443,21 +454,40 @@ function openPrompt() {
         -this.promptImage.displayHeight * 0.1,
         answer,
         {
-            fontSize: '18px',
+            fontSize: '14px',
            // fontStyle: 'bold',
             color: '#000000',
             align: 'center',
-            wordWrap: { width: textWidth }
+            wordWrap: { width: textWidth },
+           // lineSpacing: 30
         }
     )
     .setOrigin(0.5, 0)
-    .setScale(0.25)
+    .setScale(0.4)
     .setResolution(1);
 
     this.promptContainer.add([questionText, answerText]);
+    this.escHint = this.add.image(
+    view.x-30,
+    view.y-50,
+    'pressESC'
+    )
+    .setOrigin(0, 0)
+    .setDepth(2000)
+    .setScale(0.07);
 
+    
 }
 
+function updateProgressBar(scene) {
+    const progressPercent = (scene.lettersOpened / scene.totalLetters) * 100;
+
+    const fillEl = document.getElementById('progressFill');
+    const textEl = document.getElementById('progressText');
+
+    if (fillEl) fillEl.style.width = `${progressPercent}%`;
+    if (textEl) textEl.textContent = `${scene.lettersOpened} / ${scene.totalLetters} Letters Found`;
+}
 
 function closePrompt() {
 
@@ -469,8 +499,10 @@ function closePrompt() {
     if (this.overlay) this.overlay.destroy();
     if (this.promptImage) this.promptImage.destroy();
     if (this.promptContainer) this.promptContainer.destroy();
-
-
+if (this.escHint) {
+    this.escHint.destroy();
+    this.escHint = null;
+}
 }
 /* ===================== PATH GENERATION ===================== */
 

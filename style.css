@@ -1,0 +1,131 @@
+body {
+  margin: 0;
+  background: #ffcfee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative floating hearts */
+body::before {
+  content: '💗';
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  font-size: 20px;
+  opacity: 0.3;
+  animation: float 6s ease-in-out infinite;
+}
+
+body::after {
+  content: '💕';
+  position: absolute;
+  bottom: 15%;
+  right: 8%;
+  font-size: 24px;
+  opacity: 0.3;
+  animation: float 5s ease-in-out infinite reverse;
+}
+
+/* Cloud speckles - add these as elements in HTML */
+.cloud-speckle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+/* Title */
+.game-title {
+  font-family: 'Silkscreen', monospace;
+  font-size: 20px;
+  color: #d4668b;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+}
+
+/* Corner decorations */
+.corner-heart {
+  position: absolute;
+  font-size: 16px;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.corner-heart.top-right {
+  top: 5%;
+  right: 10%;
+  animation: float 7s ease-in-out infinite;
+}
+
+.corner-heart.bottom-left {
+  bottom: 20%;
+  left: 8%;
+  animation: float 6s ease-in-out infinite reverse;
+  animation-delay: 1s;
+}
+
+#game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Keep game on top */
+}
+
+#game-container canvas {
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(212, 102, 139, 0.2); /* Subtle shadow for depth */
+}
+
+.progress-container {
+  width: 80%;
+  max-width: 800px;
+  margin-top: 16px;
+  text-align: center;
+  z-index: 10;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 18px;
+  border: 3px solid #d4668b;
+  border-radius: 0;
+  background-color: #fef5e7;
+  overflow: hidden;
+  image-rendering: pixelated;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #ff6b9d;
+  transition: none;
+}
+
+.progress-text {
+  margin-top: 8px;
+  font-family: 'Silkscreen', monospace;
+  font-size: 14px;
+  color: #d4668b;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+}

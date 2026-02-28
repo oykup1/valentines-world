@@ -3,12 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <title>Walking Through My Thoughts</title>
+
+  <!-- Phaser -->
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.js"></script>
+
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script type="module" src="/js/main.js"></script>
-  <style>
-    body { margin:0; background:#ebb4d8; display:flex; justify-content:center; align-items:center; height:100vh; }
-  </style>
+
+  <!-- Your external CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Your game script -->
+  <script type="module" src="/js/main.js"></script>
 </head>
-<body></body>
+
+<body>
+  <!-- Title -->
+<h1 class="game-title">✿ walking through my thoughts of you ✿</h1>
+
+<!-- Corner hearts -->
+<div class="corner-heart top-right">💗</div>
+<div class="corner-heart bottom-left">💕</div>
+
+<!-- Cloud speckles scattered around -->
+<div class="cloud-speckle" style="top: 12%; left: 15%;"></div>
+<div class="cloud-speckle" style="top: 25%; right: 12%; animation-delay: 1s;"></div>
+<div class="cloud-speckle" style="bottom: 30%; left: 10%; animation-delay: 2s;"></div>
+<div class="cloud-speckle" style="top: 40%; right: 18%; animation-delay: 0.5s;"></div>
+<div class="cloud-speckle" style="bottom: 25%; right: 15%; animation-delay: 1.5s;"></div>
+<div class="cloud-speckle" style="top: 18%; left: 20%; animation-delay: 2.5s;"></div>
+
+  <!-- 🎮 Phaser will render the canvas INSIDE this -->
+  <div id="game-container"></div>
+
+  <!-- 🎀 Progress Bar UI (outside the game canvas) -->
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">
+      0/0 Letters Found
+    </div>
+  </div>
+</body>
 </html>
