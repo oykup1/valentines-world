@@ -238,4 +238,131 @@ body::after {
   color: #d4668b;
   text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
 }
+/* Ending Overlay */
+.ending-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 207, 238, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
 
+.ending-overlay.hidden {
+  display: none;
+}
+
+.ending-popup {
+  background: #fef5e7;
+  border: 6px solid #d4668b;
+  padding: 40px 48px;
+  max-width: 550px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(139, 69, 19, 0.3);
+  position: relative;
+  image-rendering: pixelated;
+}
+
+.ending-title {
+  font-family: 'Silkscreen', monospace;
+  font-size: 24px;
+  color: #d4668b;
+  margin: 16px 0;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+  letter-spacing: 1px;
+}
+
+.ending-content {
+  margin: 24px 0;
+  font-family: 'Silkscreen', monospace;
+  font-size: 13px;
+  color: #8b6f47;
+  line-height: 1.8;
+}
+
+.ending-content p {
+  margin: 12px 0;
+}
+
+.share-link-container {
+  margin: 24px 0;
+  padding: 16px;
+  background: white;
+  border: 3px solid #e8d5c4;
+  border-radius: 0;
+}
+
+.share-label {
+  font-family: 'Silkscreen', monospace;
+  font-size: 11px;
+  color: #d4668b;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.share-link {
+  font-family: 'Silkscreen', monospace;
+  font-size: 14px;
+  color: #ff6b9d;
+  word-break: break-all;
+  display: block;
+  margin: 8px 0;
+}
+
+.copy-button {
+  font-family: 'Silkscreen', monospace;
+  font-size: 12px;
+  padding: 8px 20px;
+  background: #ff6b9d;
+  color: white;
+  border: 3px solid #d4668b;
+  cursor: pointer;
+  margin-top: 12px;
+  box-shadow: 0 3px 8px rgba(212, 102, 139, 0.3);
+  transition: none;
+  image-rendering: pixelated;
+}
+
+.copy-button:hover {
+  background: #ff85ad;
+  transform: scale(1.05);
+}
+
+.copy-button:active {
+  transform: scale(0.98);
+}
+
+.copy-button.copied {
+  background: #90ee90;
+  border-color: #6bbd6b;
+}
+
+.continue-button {
+  font-family: 'Silkscreen', monospace;
+  font-size: 14px;
+  padding: 12px 32px;
+  background: #ff6b9d;
+  color: white;
+  border: 4px solid #d4668b;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(212, 102, 139, 0.3);
+  transition: none;
+  image-rendering: pixelated;
+}
+
+.continue-button:hover {
+  background: #ff85ad;
+  transform: scale(1.05);
+}
+
+.continue-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 6px rgba(212, 102, 139, 0.3);
+}

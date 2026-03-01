@@ -95,6 +95,28 @@ document.getElementById('start-game-btn').addEventListener('click', function() {
   // Optional: unpause Phaser game if you paused it
   // game.scene.resume('YourSceneName');
 });
+// Copy link button functionality
+document.getElementById('copy-link-btn').addEventListener('click', function() {
+  const link = 'valentines-world-ui.vercel.app';
+  navigator.clipboard.writeText(link).then(() => {
+    const btn = document.getElementById('copy-link-btn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Copied! ✓';
+    btn.classList.add('copied');
+    
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+  });
+});
+
+// Continue exploring button functionality
+document.getElementById('continue-exploring-btn').addEventListener('click', function() {
+  document.getElementById('ending-overlay').classList.add('hidden');
+});
  function create() {
     console.log("Create started");
     this.letterMessages = ["💌","💌","💌","💌","💌","💌"];
@@ -242,8 +264,8 @@ document.getElementById('start-game-btn').addEventListener('click', function() {
 
 async function loadWorldData() {
 
-    const worldId = window.location.pathname.split("/game/")[1];
-   // const worldId = "0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab";
+  //  const worldId = window.location.pathname.split("/game/")[1];
+    const worldId = "0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab";
     if (!worldId) return;
 
     const { data, error } = await supabaseClient
@@ -287,6 +309,7 @@ async function loadWorldData() {
 }
 
 function update() {
+  
      // Freeze everything when prompt is open
     if (!this.player) return;
     if (this.promptOpen) {
@@ -499,6 +522,13 @@ if (this.escHint) {
     this.escHint.destroy();
     this.escHint = null;
 }
+ // Show ending overlay when all letters are found (after closing the last letter)
+    if (this.lettersOpened === this.totalLetters && !this.endingShown) {
+        this.endingShown = true;
+        setTimeout(() => {
+            document.getElementById('ending-overlay').classList.remove('hidden');
+        }, 500); // Small delay for smooth transition
+    }
 }
 /* ===================== PATH GENERATION ===================== */
 
