@@ -264,8 +264,8 @@ document.getElementById('continue-exploring-btn').addEventListener('click', func
 
 async function loadWorldData() {
 
-  //  const worldId = window.location.pathname.split("/game/")[1];
-    const worldId = "0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab";
+    const worldId = window.location.pathname.split("/game/")[1];
+   // const worldId = "0d1492fc-4f45-42a9-afac-e4ac5dc4f0ab";
     if (!worldId) return;
 
     const { data, error } = await supabaseClient
